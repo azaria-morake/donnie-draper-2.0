@@ -40,7 +40,7 @@ const ContentSide = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     align-items: center;
-    margin-bottom: 70px;
+    margin-bottom: 50px;
   }
 `;
 
@@ -162,8 +162,8 @@ export const Boardroom = () => {
       </IllustrationSide>
       <SubHeadline>
   <strong>Good architecture isn’t scalable code. It’s scalable decisions.</strong>
-  <br />
-  If the blueprint is honest, the build can’t lie.
+  <br />   <br />
+  If the blueprint is honest, the build cannot even begin to lie.
 </SubHeadline>
       </ContentSide>
 
