@@ -131,9 +131,9 @@ export const Navigation = () => {
   };
 
   const navItems = [
-    { id: 'boardroom', label: 'Boardroom' },
+    { id: 'boardroom', label: 'Home' },
     { id: 'campaigns', label: 'Campaigns' },
-    { id: 'theman', label: 'The Man' },
+    { id: 'theman', label: 'Method' },
     { id: 'rolodex', label: 'Rolodex' },
   ];
 

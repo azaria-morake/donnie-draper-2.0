@@ -11,7 +11,7 @@ const Section = styled.section`
   align-items: center;
   overflow: hidden;
   /* The "Draper" Vibe Image: Silhouette, city lights, phone */
-  background-image: url('https://images.unsplash.com/photo-1555448248-2571f8838795?q=80&w=1000&auto=format&fit=crop');
+  background-image: url('/dd-3.png');
   background-size: cover;
   background-position: center;
 `;
@@ -60,7 +60,7 @@ const LinkContainer = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
   }
 `;
 
@@ -68,7 +68,7 @@ const LinkContainer = styled.div`
 const ContactLink = styled.a`
   font-family: ${({ theme }) => theme.fonts.mono};
   font-size: 1rem;
-  text-transform: uppercase;
+ // text-transform: uppercase;
   letter-spacing: 0.2em;
   color: ${({ theme }) => theme.colors.primary}; /* Gold text */
   text-decoration: none;
@@ -127,18 +127,18 @@ export const Rolodex = () => {
           Are you?
         </Headline>
         <SubText>
-          Open for high-stakes consultation. Make the call.
+          Don't let it go to waste. Make the call.
         </SubText>
 
         <LinkContainer>
-          <ContactLink href="mailto:your-email@example.com">Establish Comms</ContactLink>
-          <ContactLink href="https://linkedin.com" target="_blank">The Network</ContactLink>
-          <ContactLink href="https://github.com" target="_blank">The Archives</ContactLink>
+          <ContactLink href="mailto:azaraiamorake@gmail.com">Mail</ContactLink>
+          <ContactLink href="https://linkedin.com" target="_blank">LinkedIn</ContactLink>
+          <ContactLink href="https://github.com" target="_blank">GitHub</ContactLink>
         </LinkContainer>
       </ContentContainer>
 
       <Footer>
-        <Copyright>NYC / REMOTE — © {new Date().getFullYear()} DD.</Copyright>
+        <Copyright>JHB / REMOTE — © {new Date().getFullYear()} DD.</Copyright>
       </Footer>
     </Section>
   );

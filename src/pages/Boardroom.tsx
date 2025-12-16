@@ -52,6 +52,11 @@ const IllustrationSide = styled.div`
   position: relative;
   opacity: 0;
   animation: ${riseUp} 1.5s ease-out forwards 0.5s;
+  //margin-top: -4rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    margin-top: -1rem;
+  }
 
   img {
     width: 100%;
