@@ -9,7 +9,6 @@ interface ProjectProps {
   image?: string;
   mobileImage?: string;
   tech: string[];
-  /* New Props for Parent Control */
   isActive: boolean;
   onToggle: () => void;
 }
@@ -190,22 +189,31 @@ export const ProjectCard = ({
   image, 
   mobileImage, 
   tech,
-  isActive,  // Received from parent
-  onToggle   // Received from parent
+  isActive, 
+  onToggle 
 }: ProjectProps) => {
   
   const cardRef = useRef<HTMLElement>(null);
+  const isMounted = useRef(false); // Track initial render
 
-  // Auto-scroll logic remains, but listens to the Prop now
   useEffect(() => {
-    if (isActive && cardRef.current) {
+    // Skip logic on first render to prevent page jumping on load
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
+    if (cardRef.current) {
+      // Logic for both OPENING and CLOSING
+      // We use a timeout to let the CSS transition start/finish
       const timer = setTimeout(() => {
         cardRef.current?.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
+          block: 'center', // Centers the card vertically
+          inline: 'center' // Centers the card horizontally
         });
-      }, 300);
+      }, 300); // 300ms matches the transition flow nicely
+
       return () => clearTimeout(timer);
     }
   }, [isActive]);
@@ -213,12 +221,12 @@ export const ProjectCard = ({
   return (
     <Card 
       ref={cardRef} 
-      onClick={onToggle} // Uses parent handler
+      onClick={onToggle} 
       $isActive={isActive}
     >
       <ImageArea>
         <TapIndicator>
-          <span>{isActive ? "Tap To Close" : "Tap To TExpand"}</span>
+          <span>{isActive ? "Close" : "Expand"}</span>
         </TapIndicator>
 
         <OverlayTitle $isActive={isActive}>

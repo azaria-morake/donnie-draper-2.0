@@ -16,11 +16,7 @@ const Section = styled.section`
   background-size: cover;
   background-position: center;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    background-size: 50rem;
-    background-position: -19rem -5rem;
-    
-  }
+
 `;
 
 const VignetteOverlay = styled.div`

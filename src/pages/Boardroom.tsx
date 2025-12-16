@@ -147,7 +147,7 @@ export const Boardroom = () => {
 
     
       <ContentSide>
-        <PreHeader>Donnie Draper</PreHeader>
+        <PreHeader> <span style={{ color: '#64748B' }}>Call</span> Donnie Draper </PreHeader>
         <Headline>
           The Blueprint <br />
           <span style={{ color: '#64748B' }}>Before The Build.</span>
