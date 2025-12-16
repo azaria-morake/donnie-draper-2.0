@@ -1,3 +1,4 @@
+// src/pages/Boardroom.tsx
 import styled, { keyframes } from 'styled-components';
 
 // --- ANIMATIONS ---
@@ -14,68 +15,103 @@ const smokeFade = keyframes`
 
 // --- STYLES ---
 const Wrapper = styled.section`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr; /* Text gets slightly more space */
+  align-items: center;
+  padding: 0 4rem;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    grid-template-columns: 1fr;
+    padding: 6rem 2rem 2rem 2rem;
+    text-align: center;
+    gap: 2rem;
+  }
+`;
+
+const ContentSide = styled.div`
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    align-items: center;
+  }
+`;
+
+const IllustrationSide = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
   align-items: center;
-  padding: 0 2rem;
-  position: relative; /* For positioning the scroll indicator */
+  justify-content: center;
+  position: relative;
+  opacity: 0;
+  animation: ${riseUp} 1.5s ease-out forwards 0.5s;
+
+  img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    object-fit: contain;
+    /* Noir Filter: Grayscale + High Contrast */
+    filter: grayscale(100%) contrast(1.2) brightness(0.8);
+    mix-blend-mode: lighten; /* Blends nicely with dark bg */
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  }
 `;
 
 const PreHeader = styled.h2`
-  font-family: ${({ theme }) => theme.fonts.body};
-  color: ${({ theme }) => theme.colors.secondary};
-  font-size: 0.875rem;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.4em;
-  margin-bottom: 2rem;
-  
-  /* Animation */
+  margin-bottom: 1.5rem;
   opacity: 0;
   animation: ${riseUp} 1s ease-out forwards;
-  animation-delay: 0.2s;
 `;
 
 const Headline = styled.h1`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(3rem, 8vw, 7rem); /* Responsive sizing */
+  font-size: clamp(3rem, 6vw, 5.5rem);
   color: ${({ theme }) => theme.colors.text};
-  text-align: center;
-  line-height: 1.1;
-  font-weight: 700;
-
-  /* Animation */
+  line-height: 1;
+  margin-bottom: 2rem;
   opacity: 0;
-  animation: ${riseUp} 1.2s ease-out forwards;
-  animation-delay: 0.8s;
+  animation: ${riseUp} 1s ease-out forwards 0.3s;
 `;
 
-const Accent = styled.span`
-  color: ${({ theme }) => theme.colors.primary}; /* Whiskey Gold */
-  font-style: italic;
-  display: block; /* Force new line for impact */
-  margin-top: 0.5rem;
+const SubHeadline = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.secondary};
+  font-size: 1.1rem;
+  max-width: 500px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: ${riseUp} 1s ease-out forwards 0.6s;
 `;
 
 const ScrollIndicator = styled.div`
   position: absolute;
-  bottom: 3rem;
+  bottom: 2rem;
+  left: 50%; /* Center strictly */
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  
-  /* Animation */
   opacity: 0;
-  animation: ${riseUp} 1s ease-out forwards;
-  animation-delay: 2.5s; /* Waits until user has read the text */
+  animation: ${riseUp} 1s ease-out forwards 2s;
 `;
 
 const Label = styled.span`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 0.75rem;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: ${({ theme }) => theme.colors.muted};
@@ -91,14 +127,27 @@ const Line = styled.div`
 export const Boardroom = () => {
   return (
     <Wrapper>
-      <PreHeader>Donnie Draper</PreHeader>
-      <Headline>
-        Wait for it.
-        <Accent>The idea comeths.</Accent>
-      </Headline>
+      <ContentSide>
+        <PreHeader>Donnie Draper</PreHeader>
+        <Headline>
+          The Blueprint <br />
+          <span style={{ color: '#64748B' }}>Before The Build.</span>
+        </Headline>
+        <SubHeadline>
+          Architecture is not just about the bricks. It’s about the space between them. I design digital environments that feel inevitable.
+        </SubHeadline>
+      </ContentSide>
+
+      <IllustrationSide>
+        {/* Architecture/Drafting Image */}
+        <img 
+          src="/dd-1.jpg" 
+          alt="Architectural Blueprint" 
+        />
+      </IllustrationSide>
       
       <ScrollIndicator>
-        <Label>Scroll</Label>
+        <Label>Inspect</Label>
         <Line />
       </ScrollIndicator>
     </Wrapper>

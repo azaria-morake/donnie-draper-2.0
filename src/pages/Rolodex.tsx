@@ -1,117 +1,144 @@
 // src/pages/Rolodex.tsx
 import styled from 'styled-components';
 
+// --- STYLES ---
 const Section = styled.section`
-  padding: 8rem 2rem 4rem 2rem;
-  background-color: ${({ theme }) => theme.colors.background};
+  min-height: 90vh; /* Almost full screen */
+  position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  text-align: center;
+  overflow: hidden;
+  /* The "Draper" Vibe Image: Silhouette, city lights, phone */
+  background-image: url('https://images.unsplash.com/photo-1555448248-2571f8838795?q=80&w=1000&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
 `;
 
-const CallToAction = styled.h2`
+// The moody overlay that makes text readable and adds atmosphere
+const VignetteOverlay = styled.div`
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* Heavy dark gradient + a radial vignette to focus the center */
+  background: linear-gradient(to bottom, rgba(18,18,18,0.7) 0%, rgba(18,18,18,1) 90%),
+              radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+  z-index: 1;
+`;
+
+const ContentContainer = styled.div`
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 700px;
+  padding: 0 2rem;
+`;
+
+const Headline = styled.h2`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   color: ${({ theme }) => theme.colors.text};
-  margin-bottom: 1rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
 `;
 
 const SubText = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
   color: ${({ theme }) => theme.colors.secondary};
-  font-size: 1.1rem;
-  max-width: 500px;
+  font-size: 1.2rem;
   margin-bottom: 4rem;
+  opacity: 0.8;
 `;
 
-const ButtonGrid = styled.div`
+const LinkContainer = styled.div`
   display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  gap: 3rem;
   justify-content: center;
-  margin-bottom: 6rem;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    flex-direction: column;
+    gap: 2rem;
+  }
 `;
 
-const ContactButton = styled.a`
+// Minimalist, glowing links instead of buttons
+const ContactLink = styled.a`
   font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: ${({ theme }) => theme.colors.primary};
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  padding: 1rem 2rem;
-  transition: all 0.3s ease;
+  letter-spacing: 0.2em;
+  color: ${({ theme }) => theme.colors.primary}; /* Gold text */
+  text-decoration: none;
   position: relative;
-  overflow: hidden;
-  background: transparent;
+  transition: all 0.3s ease;
+  padding-bottom: 5px;
 
-  /* The "Fill" effect on hover */
-  &::before {
+  /* The glowing underline effect */
+  &::after {
     content: '';
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
-    width: 0%;
-    height: 100%;
+    width: 0%; /* Starts hidden */
+    height: 1px;
     background: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 10px ${({ theme }) => theme.colors.primary}, 0 0 20px ${({ theme }) => theme.colors.primary}; /* Neon glow */
     transition: width 0.3s ease;
-    z-index: -1;
   }
 
   &:hover {
-    color: ${({ theme }) => theme.colors.background};
-    cursor: pointer;
+    color: ${({ theme }) => theme.colors.text}; /* Turns white on hover */
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
     
-    &::before {
-      width: 100%;
+    &::after {
+      width: 100%; /* Expands full width */
     }
   }
 `;
 
 const Footer = styled.footer`
-  border-top: 1px solid ${({ theme }) => theme.colors.muted};
+  position: absolute;
+  bottom: 2rem;
   width: 100%;
-  padding-top: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  max-width: 1000px;
+  text-align: center;
+  z-index: 2;
 `;
 
 const Copyright = styled.span`
   font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.secondary};
+  font-size: 0.65rem;
+  color: ${({ theme }) => theme.colors.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 `;
 
-const AgencyMark = styled.span`
-  font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 700;
-`;
-
+// --- COMPONENT ---
 export const Rolodex = () => {
   return (
     <Section>
-      <CallToAction>The line is open.</CallToAction>
-      <SubText>
-        The agency is currently accepting new clients for Q1. 
-        If you have a vision, I have the blueprint.
-      </SubText>
+      <VignetteOverlay />
+      
+      <ContentContainer>
+        <Headline>
+          The idea is ready. <br />
+          Are you?
+        </Headline>
+        <SubText>
+          Open for high-stakes consultation. Make the call.
+        </SubText>
 
-      <ButtonGrid>
-        <ContactButton href="mailto:your-email@example.com">Email Me</ContactButton>
-        <ContactButton href="https://github.com" target="_blank">GitHub</ContactButton>
-        <ContactButton href="https://linkedin.com" target="_blank">LinkedIn</ContactButton>
-      </ButtonGrid>
+        <LinkContainer>
+          <ContactLink href="mailto:your-email@example.com">Establish Comms</ContactLink>
+          <ContactLink href="https://linkedin.com" target="_blank">The Network</ContactLink>
+          <ContactLink href="https://github.com" target="_blank">The Archives</ContactLink>
+        </LinkContainer>
+      </ContentContainer>
 
       <Footer>
-        <Copyright>© {new Date().getFullYear()} Donnie Draper. All Rights Reserved.</Copyright>
-        <AgencyMark>DD.</AgencyMark>
+        <Copyright>NYC / REMOTE — © {new Date().getFullYear()} DD.</Copyright>
       </Footer>
     </Section>
   );

@@ -3,18 +3,18 @@ import styled from 'styled-components';
 import { ProjectCard } from '../components/functional/ProjectCard';
 
 const Section = styled.section`
-  padding: 8rem 0; /* Removed side padding here to allow full-width swipe on mobile */
-  background-color: ${({ theme }) => theme.colors.background};
+  padding: 8rem 0;
+  background-color: transparent; /* Transparent to see the blueprint grid */
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden; /* Prevents horizontal scrollbar on the body */
+  overflow: hidden;
 `;
 
 const HeaderContainer = styled.div`
   width: 100%;
-  max-width: 800px;
-  padding: 0 2rem; /* Keep header aligned with desktop grid */
+  max-width: 1000px;
+  padding: 0 2rem;
 `;
 
 const Label = styled.h2`
@@ -28,46 +28,31 @@ const Label = styled.h2`
   padding-bottom: 1rem;
 `;
 
-// The magic container that switches direction
 const ScrollContainer = styled.div`
   width: 100%;
-  max-width: 800px;
-  
-  /* Desktop Layout (Default) */
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   gap: 3rem;
-  padding: 0 2rem; /* Side padding for desktop */
+  padding: 0 2rem;
 
-  /* Mobile Layout (Swipe) */
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     flex-direction: row;
-    overflow-x: auto; /* Enable horizontal scroll */
-    padding: 0 1.5rem 2rem 1.5rem; /* Add bottom padding for scrollbar/touch area */
+    overflow-x: auto;
+    padding: 0 1.5rem 2rem 1.5rem;
     gap: 1.5rem;
-    width: 100vw; /* Force full width */
-    
-    /* The Snap Physics */
+    width: 100vw;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS */
-
-    /* Hide Scrollbar (Clean Look) */
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    &::-webkit-scrollbar { display: none; }
   }
 `;
 
-// Wrapper to force card width on mobile
 const CardWrapper = styled.div`
   width: 100%;
-  
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    min-width: 85vw; /* Card takes 85% of screen width */
-    scroll-snap-align: center; /* Locks the card in the center when swiping */
+    min-width: 85vw;
+    scroll-snap-align: center;
   }
 `;
 
@@ -77,25 +62,25 @@ export const Campaigns = () => {
       title: "Vanguard Finance",
       role: "Lead Frontend Architect",
       pitch: "They wanted a dashboard. I gave them a cockpit. The data was complex, but the user experience needed to be silent.",
-      outcome: "Reduced load times by 40% and simplified user flows, resulting in a 15% increase in daily active users.",
+      // Placeholder: Abstract building
+      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop",
       tech: ["React", "TypeScript", "D3.js", "AWS"],
-      link: "#"
     },
     {
       title: "Lumina Health",
       role: "Full Stack Engineer",
       pitch: "Healthcare interfaces are usually sterile. We injected warmth into the code.",
-      outcome: "Built a HIPAA-compliant telemedicine platform that scaled to 10k concurrent users during launch week.",
-      tech: ["Next.js", "Node.js", "PostgreSQL", "WebRTC"],
-      link: "#"
+      // Placeholder: Clean white interior
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop",
+      tech: ["Next.js", "Node.js", "PostgreSQL"],
     },
     {
       title: "Aeon Motors",
       role: "Creative Developer",
       pitch: "Selling an electric future requires an electric interface. A 3D WebGL experience.",
-      outcome: "Award-winning site design that increased pre-orders by 200% over the previous quarter.",
-      tech: ["Three.js", "React-Three-Fiber", "GSAP"],
-      link: "#"
+      // Placeholder: Car detail / mechanical
+      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=800&auto=format&fit=crop",
+      tech: ["Three.js", "WebGL", "GSAP"],
     }
   ];
 
