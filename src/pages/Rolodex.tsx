@@ -10,13 +10,19 @@ const Section = styled.section`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  /* The "Draper" Vibe Image: Silhouette, city lights, phone */
+  
+  /* The "Draper" Vibe Image */
   background-image: url('/dd-3.png');
   background-size: cover;
   background-position: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    background-size: 50rem;
+    background-position: -19rem -5rem;
+    
+  }
 `;
 
-// The moody overlay that makes text readable and adds atmosphere
 const VignetteOverlay = styled.div`
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -30,7 +36,7 @@ const ContentContainer = styled.div`
   position: relative;
   z-index: 2;
   text-align: center;
-  max-width: 700px;
+  max-width: 800px;
   padding: 0 2rem;
 `;
 
@@ -49,53 +55,71 @@ const SubText = styled.p`
   font-size: 1.2rem;
   margin-bottom: 4rem;
   opacity: 0.8;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const LinkContainer = styled.div`
   display: flex;
-  gap: 3rem;
+  gap: 2rem;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    width: 100%;
   }
 `;
 
-// Minimalist, glowing links instead of buttons
-const ContactLink = styled.a`
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 1rem;
- // text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: ${({ theme }) => theme.colors.primary}; /* Gold text */
-  text-decoration: none;
+/* THE "EXECUTIVE KEY" BUTTON */
+const ContactButton = styled.a`
   position: relative;
-  transition: all 0.3s ease;
-  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 3rem;
+  min-width: 200px;
+  
+  /* Glassmorphism Base */
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  border: 1px solid ${({ theme }) => theme.colors.primary}; /* Gold Border */
+  
+  /* Typography */
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: ${({ theme }) => theme.colors.primary};
+  text-decoration: none;
+  
+  /* Animation */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  overflow: hidden;
 
-  /* The glowing underline effect */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0%; /* Starts hidden */
-    height: 1px;
+  /* The Hover State: "Lights On" */
+  &:hover {
     background: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 10px ${({ theme }) => theme.colors.primary}, 0 0 20px ${({ theme }) => theme.colors.primary}; /* Neon glow */
-    transition: width 0.3s ease;
+    color: ${({ theme }) => theme.colors.background}; /* Text turns dark for contrast */
+    box-shadow: 0 0 25px rgba(194, 139, 71, 0.4); /* Golden Glow */
+    transform: translateY(-2px);
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.text}; /* Turns white on hover */
-    text-shadow: 0 0 10px rgba(255,255,255,0.5);
-    
-    &::after {
-      width: 100%; /* Expands full width */
-    }
+  /* Active/Click State */
+  &:active {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+
+  /* Mobile Tweaks */
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    width: 100%;
+    padding: 1.2rem;
   }
 `;
 
@@ -105,6 +129,7 @@ const Footer = styled.footer`
   width: 100%;
   text-align: center;
   z-index: 2;
+  opacity: 0.6;
 `;
 
 const Copyright = styled.span`
@@ -131,9 +156,17 @@ export const Rolodex = () => {
         </SubText>
 
         <LinkContainer>
-          <ContactLink href="mailto:azaraiamorake@gmail.com">Mail</ContactLink>
-          <ContactLink href="https://linkedin.com" target="_blank">LinkedIn</ContactLink>
-          <ContactLink href="https://github.com" target="_blank">GitHub</ContactLink>
+          <ContactButton href="mailto:azaraiamorake@gmail.com">
+            Mail
+          </ContactButton>
+          
+          <ContactButton href="https://linkedin.com/in/azaria-morake-04216b242/" target="_blank">
+            LinkedIn
+          </ContactButton>
+          
+          <ContactButton href="https://github.com/azaria-morake" target="_blank">
+            GitHub
+          </ContactButton>
         </LinkContainer>
       </ContentContainer>
 

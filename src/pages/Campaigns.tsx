@@ -1,6 +1,9 @@
 // src/pages/Campaigns.tsx
 import styled from 'styled-components';
 import { ProjectCard } from '../components/functional/ProjectCard';
+import { useRef, useState, useEffect } from 'react';
+
+// --- STYLES ---
 
 const Section = styled.section`
   padding: 8rem 0;
@@ -9,12 +12,27 @@ const Section = styled.section`
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  position: relative; /* Needed to anchor the absolute arrows */
+
+  /* --- MOBILE CENTERING FIX --- */
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    min-height: 100vh;
+    padding: 0;
+    justify-content: center;
+    scroll-margin-top: 0;
+  }
 `;
 
 const HeaderContainer = styled.div`
   width: 100%;
   max-width: 1000px;
   padding: 0 2rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    text-align: center;
+    padding: 0 1.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const Label = styled.h2`
@@ -26,6 +44,11 @@ const Label = styled.h2`
   letter-spacing: 0.2em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.muted};
   padding-bottom: 1rem;
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+  }
 `;
 
 const ScrollContainer = styled.div`
@@ -39,9 +62,11 @@ const ScrollContainer = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     flex-direction: row;
     overflow-x: auto;
-    padding: 0 1.5rem 2rem 1.5rem;
-    gap: 1.5rem;
+    
+    padding: 0 1.5rem 1rem 1.5rem; 
+    gap: 1rem;
     width: 100vw;
+    
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     
@@ -59,13 +84,95 @@ const CardWrapper = styled.div`
   }
 `;
 
+/* --- NAV ARROWS (Mobile Only) --- */
+const NavArrow = styled.button<{ $direction: 'left' | 'right', $visible: boolean }>`
+  display: none; /* Hidden on Desktop */
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    /* Vertically center relative to viewport/cards */
+    top: 55%; 
+    transform: translateY(-50%);
+    
+    /* Position on edges */
+    ${({ $direction }) => $direction === 'left' ? 'left: 0.5rem;' : 'right: 0.5rem;'}
+    
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    
+    /* Glassmorphism look */
+    background: rgba(18, 18, 18, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid ${({ theme }) => theme.colors.muted};
+    color: ${({ theme }) => theme.colors.primary}; /* Gold arrows */
+    font-size: 1.5rem;
+    line-height: 1;
+    z-index: 50; /* Above the cards */
+    cursor: pointer;
+    
+    /* Visibility transition */
+    opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+    pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
+    transition: opacity 0.3s ease, background 0.3s ease;
+    
+    &:active {
+      background: ${({ theme }) => theme.colors.primary};
+      color: ${({ theme }) => theme.colors.background};
+    }
+  }
+`;
+
+// --- COMPONENT ---
+
 export const Campaigns = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  // Check scroll position to toggle arrow visibility
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      // Use a small buffer (10px) to prevent flickering at edges
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  // Listen for scroll events
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScroll);
+      // Run once on mount to set initial state
+      checkScroll();
+    }
+    return () => el?.removeEventListener('scroll', checkScroll);
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      // Scroll by 85% of screen width (matching card size)
+      const scrollAmount = clientWidth * 0.85; 
+      
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const projects = [
     {
       title: "FinBridge",
       role: "Lead Architect",
       pitch: "Connecting SMEs to capital with silent precision. AI-driven insights meet real-time banking integrations for a seamless investment ecosystem.",
-      image: "/finbridge.jpg", // Using same image for desktop for now
+      image: "/finbridge.jpg",
       mobileImage: "/finbridge-1-1.png",
       tech: ["React", "Python", "AI/ML", "AWS"],
     },
@@ -117,7 +224,26 @@ export const Campaigns = () => {
         <Label>Selected Campaigns</Label>
       </HeaderContainer>
 
-      <ScrollContainer>
+      {/* Navigation Arrows (Mobile Only) */}
+      <NavArrow 
+        $direction="left" 
+        $visible={canScrollLeft} 
+        onClick={() => scroll('left')}
+        aria-label="Scroll Left"
+      >
+        ←
+      </NavArrow>
+      
+      <NavArrow 
+        $direction="right" 
+        $visible={canScrollRight} 
+        onClick={() => scroll('right')}
+        aria-label="Scroll Right"
+      >
+        →
+      </NavArrow>
+
+      <ScrollContainer ref={scrollRef}>
         {projects.map((p, i) => (
           <CardWrapper key={i}>
             <ProjectCard {...p} />

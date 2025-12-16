@@ -40,7 +40,7 @@ const ContentSide = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     align-items: center;
-    margin-bottom: 100px;
+    margin-bottom: 70px;
   }
 `;
 

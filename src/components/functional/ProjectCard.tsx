@@ -1,39 +1,74 @@
 // src/components/functional/ProjectCard.tsx
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { useState } from 'react';
 
 interface ProjectProps {
   title: string;
   role: string;
   pitch: string;
   image?: string;
-  mobileImage?: string; // New prop for the 1:1 mobile image
+  mobileImage?: string;
   tech: string[];
 }
 
-const Card = styled.article`
+// 1. The Container (Card)
+const Card = styled.article<{ $isActive: boolean }>`
   background: ${({ theme }) => theme.colors.background};
   border: 1px solid ${({ theme }) => theme.colors.muted};
-  /* The "Blueprint" Shadow - gives it depth like a pinned board */
   box-shadow: 12px 12px 0px rgba(20, 20, 20, 0.4); 
   display: flex;
   flex-direction: column;
-  /* Minimum width for mobile swipe - matches your layout */
-  min-width: 85vw; 
+  min-width: 320px;
   height: 100%;
-  transition: transform 0.3s ease, border-color 0.3s ease;
   position: relative;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
-     min-width: 320px; /* Reset to standard width on desktop */
+  /* --- DESKTOP HOVER --- */
+  /* Only apply hover effects if the device supports hover (mouse) */
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-5px);
+      border-color: ${({ theme }) => theme.colors.primary};
+      box-shadow: 15px 15px 0px rgba(194, 139, 71, 0.1);
+    }
   }
 
-  &:hover {
+  /* --- ACTIVE STATE (Mobile Tap) --- */
+  ${({ $isActive, theme }) => $isActive && css`
     transform: translateY(-5px);
-    border-color: ${({ theme }) => theme.colors.primary};
-    
-    /* Make the shadow "sharper" on hover */
-    box-shadow: 15px 15px 0px rgba(194, 139, 71, 0.1); 
+    border-color: ${theme.colors.primary};
+    box-shadow: 15px 15px 0px rgba(194, 139, 71, 0.1);
+  `}
+`;
+
+// 2. The Image Component (Handles its own B&W logic)
+const StyledImage = styled.img<{ $isActive: boolean }>`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.5s ease, transform 0.5s ease;
+  will-change: filter, transform;
+
+  /* DEFAULT: Black & White */
+  filter: grayscale(100%);
+  transform: scale(1);
+
+  /* --- DESKTOP HOVER --- */
+  ${Card}:hover & {
+    @media (hover: hover) {
+      filter: grayscale(0%);
+      transform: scale(1.05);
+    }
   }
+
+  /* --- ACTIVE STATE (Explicit Prop) --- */
+  /* This guarantees color when clicked, regardless of hover state */
+  ${({ $isActive }) => $isActive && css`
+    filter: grayscale(0%) !important;
+    transform: scale(1.05) !important;
+  `}
 `;
 
 const ImageArea = styled.div`
@@ -43,25 +78,12 @@ const ImageArea = styled.div`
   background-color: #0f0f0f;
   border-bottom: 1px solid ${({ theme }) => theme.colors.muted};
   overflow: hidden;
-  position: relative; /* For positioning the swipe indicator */
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(100%); /* Keeps the noir vibe */
-    transition: filter 0.5s ease, transform 0.5s ease;
-  }
+  position: relative;
 
   /* MOBILE UPDATE: Force 1:1 Aspect Ratio */
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     height: auto;
     aspect-ratio: 1 / 1;
-  }
-
-  ${Card}:hover & img {
-    filter: grayscale(0%); /* Color returns on hover */
-    transform: scale(1.05); /* Subtle zoom */
   }
 `;
 
@@ -113,9 +135,9 @@ const TechTag = styled.span`
   border-radius: 2px;
 `;
 
-/* New Mobile-Only Swipe Indicator */
-const SwipeIndicator = styled.div`
-  display: none; /* Hidden on desktop */
+// The "Tap to Expand" overlay
+const TapIndicator = styled.div`
+  display: none;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     display: flex;
@@ -129,7 +151,7 @@ const SwipeIndicator = styled.div`
     border: 1px solid ${({ theme }) => theme.colors.primary};
     border-radius: 2px;
     z-index: 10;
-    pointer-events: none;
+    pointer-events: none; /* Let clicks pass through to the Card */
     
     span {
       font-family: ${({ theme }) => theme.fonts.mono};
@@ -142,28 +164,26 @@ const SwipeIndicator = styled.div`
 `;
 
 export const ProjectCard = ({ title, role, pitch, image, mobileImage, tech }: ProjectProps) => {
+  const [isActive, setIsActive] = useState(false);
+
   return (
-    <Card>
+    <Card onClick={() => setIsActive(!isActive)} $isActive={isActive}>
       <ImageArea>
-        {/* Mobile Indicator Overlay */}
-        <SwipeIndicator>
-          <span>← Swipe →</span>
-        </SwipeIndicator>
+        {/* The Indicator remains! */}
+        <TapIndicator>
+          <span>{isActive ? "Tap to Close" : "Tap to Expand"}</span>
+        </TapIndicator>
 
         <picture>
-          {/* Mobile Source (1:1) */}
           {mobileImage && (
-            <source 
-              media="(max-width: 768px)" 
-              srcSet={mobileImage} 
-            />
+            <source media="(max-width: 768px)" srcSet={mobileImage} />
           )}
-          {/* Desktop/Default Source */}
-          {image ? (
-            <img src={image} alt={title} />
-          ) : (
-            <div style={{ width: '100%', height: '100%', background: '#1a1a1a' }} />
-          )}
+          
+          <StyledImage 
+            src={image || ''} 
+            alt={title} 
+            $isActive={isActive} 
+          />
         </picture>
       </ImageArea>
 
