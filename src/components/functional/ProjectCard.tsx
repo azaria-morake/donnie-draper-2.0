@@ -226,7 +226,7 @@ export const ProjectCard = ({
     >
       <ImageArea>
         <TapIndicator>
-          <span>{isActive ? "Close" : "Expand"}</span>
+          <span>{isActive ? "Tap To Close" : "Tap To Expand"}</span>
         </TapIndicator>
 
         <OverlayTitle $isActive={isActive}>
