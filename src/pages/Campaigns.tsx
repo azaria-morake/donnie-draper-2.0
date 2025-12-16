@@ -12,9 +12,8 @@ const Section = styled.section`
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  position: relative; /* Needed to anchor the absolute arrows */
+  position: relative;
 
-  /* --- MOBILE CENTERING FIX --- */
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     min-height: 100vh;
     padding: 0;
@@ -51,7 +50,8 @@ const Label = styled.h2`
   }
 `;
 
-const ScrollContainer = styled.div`
+// THE SCROLL CONTAINER WITH LOCKING LOGIC
+const ScrollContainer = styled.div<{ $isLocked?: boolean }>`
   width: 100%;
   max-width: 1000px;
   display: flex;
@@ -61,15 +61,17 @@ const ScrollContainer = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     flex-direction: row;
-    overflow-x: auto;
-    
     padding: 0 1.5rem 1rem 1.5rem; 
     gap: 1rem;
     width: 100vw;
     
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    /* THE LOCK: If a card is active ($isLocked), kill horizontal scroll */
+    overflow-x: ${({ $isLocked }) => ($isLocked ? 'hidden' : 'auto')};
     
+    /* Disable snapping when locked to prevent jitter */
+    scroll-snap-type: ${({ $isLocked }) => ($isLocked ? 'none' : 'x mandatory')};
+    
+    scroll-behavior: smooth;
     &::-webkit-scrollbar { display: none; }
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -84,40 +86,32 @@ const CardWrapper = styled.div`
   }
 `;
 
-/* --- NAV ARROWS (Mobile Only) --- */
 const NavArrow = styled.button<{ $direction: 'left' | 'right', $visible: boolean }>`
-  display: none; /* Hidden on Desktop */
+  display: none;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    /* Vertically center relative to viewport/cards */
     top: 55%; 
     transform: translateY(-50%);
-    
-    /* Position on edges */
     ${({ $direction }) => $direction === 'left' ? 'left: 0.5rem;' : 'right: 0.5rem;'}
-    
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    
-    /* Glassmorphism look */
     background: rgba(18, 18, 18, 0.6);
     backdrop-filter: blur(4px);
     border: 1px solid ${({ theme }) => theme.colors.muted};
-    color: ${({ theme }) => theme.colors.primary}; /* Gold arrows */
+    color: ${({ theme }) => theme.colors.primary};
     font-size: 1.5rem;
     line-height: 1;
-    z-index: 50; /* Above the cards */
+    z-index: 50;
     cursor: pointer;
     
-    /* Visibility transition */
     opacity: ${({ $visible }) => ($visible ? 1 : 0)};
     pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
-    transition: opacity 0.3s ease, background 0.3s ease;
+    transition: opacity 0.3s ease;
     
     &:active {
       background: ${({ theme }) => theme.colors.primary};
@@ -130,25 +124,23 @@ const NavArrow = styled.button<{ $direction: 'left' | 'right', $visible: boolean
 
 export const Campaigns = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeProject, setActiveProject] = useState<number | null>(null);
 
-  // Check scroll position to toggle arrow visibility
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      // Use a small buffer (10px) to prevent flickering at edges
       setCanScrollLeft(scrollLeft > 10);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
     }
   };
 
-  // Listen for scroll events
   useEffect(() => {
     const el = scrollRef.current;
     if (el) {
       el.addEventListener('scroll', checkScroll);
-      // Run once on mount to set initial state
       checkScroll();
     }
     return () => el?.removeEventListener('scroll', checkScroll);
@@ -157,13 +149,19 @@ export const Campaigns = () => {
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const { clientWidth } = scrollRef.current;
-      // Scroll by 85% of screen width (matching card size)
       const scrollAmount = clientWidth * 0.85; 
-      
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       });
+    }
+  };
+
+  const handleToggle = (index: number) => {
+    if (activeProject === index) {
+      setActiveProject(null);
+    } else {
+      setActiveProject(index);
     }
   };
 
@@ -224,29 +222,32 @@ export const Campaigns = () => {
         <Label>Selected Campaigns</Label>
       </HeaderContainer>
 
-      {/* Navigation Arrows (Mobile Only) */}
+      {/* ARROWS: Hide when ANY card is active */}
       <NavArrow 
         $direction="left" 
-        $visible={canScrollLeft} 
+        $visible={canScrollLeft && activeProject === null} 
         onClick={() => scroll('left')}
-        aria-label="Scroll Left"
       >
         ←
       </NavArrow>
       
       <NavArrow 
         $direction="right" 
-        $visible={canScrollRight} 
+        $visible={canScrollRight && activeProject === null} 
         onClick={() => scroll('right')}
-        aria-label="Scroll Right"
       >
         →
       </NavArrow>
 
-      <ScrollContainer ref={scrollRef}>
+      {/* SCROLL CONTAINER: Locks if activeProject is not null */}
+      <ScrollContainer ref={scrollRef} $isLocked={activeProject !== null}>
         {projects.map((p, i) => (
           <CardWrapper key={i}>
-            <ProjectCard {...p} />
+            <ProjectCard 
+              {...p} 
+              isActive={activeProject === i}
+              onToggle={() => handleToggle(i)}
+            />
           </CardWrapper>
         ))}
       </ScrollContainer>

@@ -1,6 +1,6 @@
 // src/components/functional/ProjectCard.tsx
 import styled, { css } from 'styled-components';
-import { useState } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface ProjectProps {
   title: string;
@@ -9,28 +9,28 @@ interface ProjectProps {
   image?: string;
   mobileImage?: string;
   tech: string[];
+  /* New Props for Parent Control */
+  isActive: boolean;
+  onToggle: () => void;
 }
 
 // --- STYLES ---
 
-// 1. The Card Container
 const Card = styled.article<{ $isActive: boolean }>`
   background: ${({ theme }) => theme.colors.background};
   border: 1px solid ${({ theme }) => theme.colors.muted};
   box-shadow: 12px 12px 0px rgba(20, 20, 20, 0.4); 
   display: flex;
   flex-direction: column;
-  /* Width varies: Mobile needs to be wide enough, Desktop fixed */
   width: 100%;
   min-width: 300px; 
-  
   position: relative;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  overflow: hidden; /* Critical for the collapse animation */
+  overflow: hidden;
 
-  /* Hover State (Desktop) - Only affects border/shadow, not expansion */
+  /* Hover (Desktop) */
   @media (hover: hover) {
     &:hover {
       transform: translateY(-5px);
@@ -39,7 +39,7 @@ const Card = styled.article<{ $isActive: boolean }>`
     }
   }
 
-  /* Active State (Expanded) */
+  /* Active (Expanded) */
   ${({ $isActive, theme }) => $isActive && css`
     transform: translateY(-5px);
     border-color: ${theme.colors.primary};
@@ -47,7 +47,6 @@ const Card = styled.article<{ $isActive: boolean }>`
   `}
 `;
 
-// 2. The Image Component
 const StyledImage = styled.img<{ $isActive: boolean }>`
   width: 100%;
   height: 100%;
@@ -55,11 +54,9 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
   transition: filter 0.5s ease, transform 0.5s ease;
   will-change: filter, transform;
 
-  /* Default: B&W */
   filter: grayscale(100%) brightness(0.8);
   transform: scale(1);
 
-  /* Hover (Desktop) */
   ${Card}:hover & {
     @media (hover: hover) {
       filter: grayscale(0%);
@@ -67,7 +64,6 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
     }
   }
 
-  /* Active (Expanded) - Force Color */
   ${({ $isActive }) => $isActive && css`
     filter: grayscale(0%) !important;
     transform: scale(1.05) !important;
@@ -75,7 +71,6 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
 `;
 
 const ImageArea = styled.div`
-  /* Fixed Height for Thumbnail look */
   height: 300px; 
   width: 100%;
   background-color: #0f0f0f;
@@ -83,39 +78,30 @@ const ImageArea = styled.div`
   overflow: hidden;
   position: relative;
 
-  /* Mobile: Square aspect ratio */
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     height: auto;
     aspect-ratio: 1 / 1;
   }
 `;
 
-// 3. The Overlay Title (Visible ONLY when collapsed)
 const OverlayTitle = styled.h3<{ $isActive: boolean }>`
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   padding: 1.5rem;
-  
   font-family: ${({ theme }) => theme.fonts.heading};
   font-size: 1.75rem;
   color: #fff;
   z-index: 5;
-  
-  /* Gradient background for readability */
   background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-  
-  /* Transition: Fade out when active */
   opacity: ${({ $isActive }) => ($isActive ? 0 : 1)};
   transform: translateY(${({ $isActive }) => ($isActive ? '20px' : '0')});
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 `;
 
-// 4. The Collapsible Content Drawer
 const ContentDrawer = styled.div<{ $isActive: boolean }>`
-  /* The Collapse Magic */
   max-height: ${({ $isActive }) => ($isActive ? '1000px' : '0')};
   opacity: ${({ $isActive }) => ($isActive ? '1' : '0')};
   overflow: hidden;
@@ -129,7 +115,6 @@ const InnerContent = styled.div`
   flex-direction: column;
 `;
 
-// Typography & Tags
 const Title = styled.h3`
   font-family: ${({ theme }) => theme.fonts.heading};
   font-size: 1.75rem;
@@ -177,7 +162,7 @@ const TapIndicator = styled.div`
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 1rem; /* Moved to top right so it doesn't overlap title */
+    top: 1rem;
     right: 1rem;
     background: rgba(0, 0, 0, 0.7);
     padding: 0.25rem 0.5rem;
@@ -198,18 +183,44 @@ const TapIndicator = styled.div`
 
 // --- COMPONENT ---
 
-export const ProjectCard = ({ title, role, pitch, image, mobileImage, tech }: ProjectProps) => {
-  const [isActive, setIsActive] = useState(false);
+export const ProjectCard = ({ 
+  title, 
+  role, 
+  pitch, 
+  image, 
+  mobileImage, 
+  tech,
+  isActive,  // Received from parent
+  onToggle   // Received from parent
+}: ProjectProps) => {
+  
+  const cardRef = useRef<HTMLElement>(null);
+
+  // Auto-scroll logic remains, but listens to the Prop now
+  useEffect(() => {
+    if (isActive && cardRef.current) {
+      const timer = setTimeout(() => {
+        cardRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center'
+        });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive]);
 
   return (
-    <Card onClick={() => setIsActive(!isActive)} $isActive={isActive}>
+    <Card 
+      ref={cardRef} 
+      onClick={onToggle} // Uses parent handler
+      $isActive={isActive}
+    >
       <ImageArea>
-        {/* Indicator (Top Right) */}
         <TapIndicator>
-          <span>{isActive ? "Tap To Close" : "Tap To Expand"}</span>
+          <span>{isActive ? "Tap To Close" : "Tap To TExpand"}</span>
         </TapIndicator>
 
-        {/* Title Overlay (Bottom Left) - Hides when expanded */}
         <OverlayTitle $isActive={isActive}>
           {title}
         </OverlayTitle>
@@ -226,10 +237,8 @@ export const ProjectCard = ({ title, role, pitch, image, mobileImage, tech }: Pr
         </picture>
       </ImageArea>
 
-      {/* The Collapsible Drawer */}
       <ContentDrawer $isActive={isActive}>
         <InnerContent>
-          {/* Note: We repeat Title here so it's visible in the expanded state too */}
           <Title>{title}</Title>
           <Role>{role}</Role>
           <Text>{pitch}</Text>

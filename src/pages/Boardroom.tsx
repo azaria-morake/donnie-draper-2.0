@@ -84,7 +84,7 @@ const PreHeader = styled.h2`
 
 const Headline = styled.h1`
   font-family: ${({ theme }) => theme.fonts.heading};
-  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-size: clamp(2.7rem, 6vw, 5.5rem);
   color: ${({ theme }) => theme.colors.text};
   line-height: 1;
   margin-bottom: 2rem;
