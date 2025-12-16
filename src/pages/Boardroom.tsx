@@ -26,7 +26,7 @@ const Wrapper = styled.section`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     grid-template-columns: 1fr;
-    padding: 6rem 2rem 2rem 2rem;
+    padding: 1rem 2rem 2rem 2rem;
     text-align: center;
     gap: 2rem;
   }
@@ -40,7 +40,7 @@ const ContentSide = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 100px;
   }
 `;
 
@@ -105,11 +105,15 @@ const SubHeadline = styled.p`
   strong {
     font-weight: 600;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    padding-top: 1rem;
+  }
 `;
 
 const ScrollIndicator = styled.div`
   position: absolute;
-  bottom: 2rem;
+  bottom: 7rem;
   left: 50%; /* Center strictly */
   transform: translateX(-50%);
   display: flex;

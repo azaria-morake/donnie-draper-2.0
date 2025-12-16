@@ -222,18 +222,29 @@ export const TheMan = () => {
         <GridContent>
           {/* Card 1: Philosophy */}
           <PhilosophySide>
-            <BigStat>90%</BigStat>
-            <StatLabel>Contemplation</StatLabel>
-            
-            <div style={{ opacity: 0.5, marginBottom: '2rem' }}>
-              <BigStat style={{ fontSize: '3rem' }}>10%</BigStat>
-              <StatLabel style={{ border: 'none', padding: 0 }}>Execution</StatLabel>
-            </div>
+             {/* Row for 90% and 10% */}
+  <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-end', marginBottom: '2rem' }}>
+  <div>
+      <BigStat style={{ fontSize: '3rem' }}>90%</BigStat>
+      <StatLabel style={{ border: 'none', padding: 0 }}>Contemplation</StatLabel>
+    </div>
+    <div>
+      <BigStat style={{ fontSize: '3rem' }}>10%</BigStat>
+      <StatLabel style={{ border: 'none', padding: 0 }}>Execution</StatLabel>
+    </div>
+  </div>
+
+  {/* 100% below */}
+  <div style={{ textAlign: 'center' }}>
+    <BigStat>100%</BigStat>
+    <StatLabel>Precision</StatLabel>
+  </div>
 
             <Copy>
-              True clarity is not rushed. I treat every project like a skyscraper: if the foundation is off by an inch, the penthouse will be off by a mile. 
+            Precision means the product behaves exactly as promised, because every decision was made before it was built.
+            Nothing is accidental — the idea, the architecture, the final line of code — all intentional. 
               <br /><br />
-              I measure twice. I cut once.
+              There's only one clean cut.
             </Copy>
           </PhilosophySide>
 
