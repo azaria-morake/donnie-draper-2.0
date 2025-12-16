@@ -94,12 +94,17 @@ const Headline = styled.h1`
 
 const SubHeadline = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1.1rem;
   max-width: 500px;
   line-height: 1.6;
   opacity: 0;
   animation: ${riseUp} 1s ease-out forwards 0.6s;
+
+
+  strong {
+    font-weight: 600;
+  }
 `;
 
 const ScrollIndicator = styled.div`
@@ -134,24 +139,31 @@ const Line = styled.div`
 export const Boardroom = () => {
   return (
     <Wrapper>
+
+
+    
       <ContentSide>
         <PreHeader>Donnie Draper</PreHeader>
         <Headline>
           The Blueprint <br />
           <span style={{ color: '#64748B' }}>Before The Build.</span>
         </Headline>
-        <SubHeadline>
-          Architecture is not just about the bricks. It’s about the space between them. I design digital environments that feel inevitable.
-        </SubHeadline>
-      </ContentSide>
 
-      <IllustrationSide>
+        <IllustrationSide>
         {/* Architecture/Drafting Image */}
         <img 
           src="/dd-1.jpg" 
           alt="Architectural Blueprint" 
         />
       </IllustrationSide>
+      <SubHeadline>
+  <strong>Good architecture isn’t scalable code. It’s scalable decisions.</strong>
+  <br />
+  If the blueprint is honest, the build can’t lie.
+</SubHeadline>
+      </ContentSide>
+
+
       
       <ScrollIndicator>
         <Label>Inspect</Label>
