@@ -4,7 +4,7 @@ import { ProjectCard } from '../components/functional/ProjectCard';
 
 const Section = styled.section`
   padding: 8rem 0;
-  background-color: transparent; /* Transparent to see the blueprint grid */
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +44,10 @@ const ScrollContainer = styled.div`
     width: 100vw;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
+    
     &::-webkit-scrollbar { display: none; }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 `;
 
@@ -59,28 +62,52 @@ const CardWrapper = styled.div`
 export const Campaigns = () => {
   const projects = [
     {
-      title: "Vanguard Finance",
-      role: "Lead Frontend Architect",
-      pitch: "They wanted a dashboard. I gave them a cockpit. The data was complex, but the user experience needed to be silent.",
-      // Placeholder: Abstract building
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop",
-      tech: ["React", "TypeScript", "D3.js", "AWS"],
+      title: "FinBridge",
+      role: "Lead Architect",
+      pitch: "Connecting SMEs to capital with silent precision. AI-driven insights meet real-time banking integrations for a seamless investment ecosystem.",
+      image: "/finbridge.jpg", // Using same image for desktop for now
+      mobileImage: "/finbridge-1-1.png",
+      tech: ["React", "Python", "AI/ML", "AWS"],
     },
     {
-      title: "Lumina Health",
+      title: "UX Giants",
+      role: "Product Engineer",
+      pitch: "Code is emotion. We don't just build software; we engineer the feeling behind the pixel, merging technical prowess with human-centric design.",
+      image: "/ux-giants.jpg",
+      mobileImage: "/ux-giants-1-1.png",
+      tech: ["React", "GSAP", "Node.js", "Design Systems"],
+    },
+    {
+      title: "WAYPOINT",
       role: "Full Stack Engineer",
-      pitch: "Healthcare interfaces are usually sterile. We injected warmth into the code.",
-      // Placeholder: Clean white interior
-      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop",
-      tech: ["Next.js", "Node.js", "PostgreSQL"],
+      pitch: "Safety in real-time. A geospatial panic button that tracks your journey and alerts your circle when it matters most.",
+      image: "/waypoint.jpg",
+      mobileImage: "/waypoint-1-1.png",
+      tech: ["React", "Firebase", "Mapbox", "Geolocation"],
     },
     {
-      title: "Aeon Motors",
-      role: "Creative Developer",
-      pitch: "Selling an electric future requires an electric interface. A 3D WebGL experience.",
-      // Placeholder: Car detail / mechanical
-      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=800&auto=format&fit=crop",
-      tech: ["Three.js", "WebGL", "GSAP"],
+      title: "LyfLify",
+      role: "Backend Lead",
+      pitch: "Healthcare without the cold wait. AI triage, instant booking, and medical records in one seamless interface bridging patient and cure.",
+      image: "/lyflify.jpg",
+      mobileImage: "/lyflify-1-1.png",
+      tech: ["Python", "FastAPI", "React", "PostgreSQL"],
+    },
+    {
+      title: "TembaShield",
+      role: "Security Analyst",
+      pitch: "A national digital shield. AI-powered threat scanning and ransomware resilience democratized for individuals and enterprises alike.",
+      image: "/tembashield.jpg",
+      mobileImage: "/tembashield-1-1.png",
+      tech: ["Python", "Rust", "CyberSec", "AI Ops"],
+    },
+    {
+      title: "FotoDump",
+      role: "Mobile Developer",
+      pitch: "Ephemeral memories for the digital age. Upload albums that vanish after 24 hours. The beauty of the moment, captured then released.",
+      image: "/fotodump.jpg",
+      mobileImage: "/fotodump-1-1.png",
+      tech: ["React Native", "Firebase", "Cloud Functions"],
     }
   ];
 

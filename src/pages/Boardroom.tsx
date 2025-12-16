@@ -40,6 +40,7 @@ const ContentSide = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     align-items: center;
+    margin-bottom: 10px;
   }
 `;
 
@@ -119,7 +120,8 @@ const Label = styled.span`
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: ${({ theme }) => theme.colors.muted};
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const Line = styled.div`

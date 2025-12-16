@@ -5,7 +5,8 @@ interface ProjectProps {
   title: string;
   role: string;
   pitch: string;
-  image?: string; // We now accept an image
+  image?: string;
+  mobileImage?: string; // New prop for the 1:1 mobile image
   tech: string[];
 }
 
@@ -16,10 +17,15 @@ const Card = styled.article`
   box-shadow: 12px 12px 0px rgba(20, 20, 20, 0.4); 
   display: flex;
   flex-direction: column;
-  min-width: 320px; /* Minimum width for mobile swipe */
+  /* Minimum width for mobile swipe - matches your layout */
+  min-width: 85vw; 
   height: 100%;
   transition: transform 0.3s ease, border-color 0.3s ease;
   position: relative;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+     min-width: 320px; /* Reset to standard width on desktop */
+  }
 
   &:hover {
     transform: translateY(-5px);
@@ -31,11 +37,13 @@ const Card = styled.article`
 `;
 
 const ImageArea = styled.div`
-  height: 200px;
+  /* Desktop Default */
+  height: 400px;
   width: 100%;
   background-color: #0f0f0f;
   border-bottom: 1px solid ${({ theme }) => theme.colors.muted};
   overflow: hidden;
+  position: relative; /* For positioning the swipe indicator */
   
   img {
     width: 100%;
@@ -43,6 +51,12 @@ const ImageArea = styled.div`
     object-fit: cover;
     filter: grayscale(100%); /* Keeps the noir vibe */
     transition: filter 0.5s ease, transform 0.5s ease;
+  }
+
+  /* MOBILE UPDATE: Force 1:1 Aspect Ratio */
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 
   ${Card}:hover & img {
@@ -99,17 +113,60 @@ const TechTag = styled.span`
   border-radius: 2px;
 `;
 
-export const ProjectCard = ({ title, role, pitch, image, tech }: ProjectProps) => {
+/* New Mobile-Only Swipe Indicator */
+const SwipeIndicator = styled.div`
+  display: none; /* Hidden on desktop */
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.25rem 0.5rem;
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+    border-radius: 2px;
+    z-index: 10;
+    pointer-events: none;
+    
+    span {
+      font-family: ${({ theme }) => theme.fonts.mono};
+      font-size: 0.6rem;
+      color: ${({ theme }) => theme.colors.primary};
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+  }
+`;
+
+export const ProjectCard = ({ title, role, pitch, image, mobileImage, tech }: ProjectProps) => {
   return (
     <Card>
       <ImageArea>
-        {/* Use the provided image, or a fallback color block */}
-        {image ? (
-          <img src={image} alt={title} />
-        ) : (
-          <div style={{ width: '100%', height: '100%', background: '#1a1a1a' }} />
-        )}
+        {/* Mobile Indicator Overlay */}
+        <SwipeIndicator>
+          <span>← Swipe →</span>
+        </SwipeIndicator>
+
+        <picture>
+          {/* Mobile Source (1:1) */}
+          {mobileImage && (
+            <source 
+              media="(max-width: 768px)" 
+              srcSet={mobileImage} 
+            />
+          )}
+          {/* Desktop/Default Source */}
+          {image ? (
+            <img src={image} alt={title} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', background: '#1a1a1a' }} />
+          )}
+        </picture>
       </ImageArea>
+
       <Content>
         <Title>{title}</Title>
         <Role>{role}</Role>
