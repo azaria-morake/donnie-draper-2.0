@@ -187,7 +187,7 @@ export const Boardroom = () => {
 
         {/* --- MOBILE ONLY IMAGE (Inserted Here) --- */}
         <MobileIllustration>
-          <img src="/dd-5.png" alt="Architectural Blueprint" />
+          <img src="/dd7.png" alt="Architectural Blueprint" />
         </MobileIllustration>
 
         <SubHeadline>
@@ -199,7 +199,7 @@ export const Boardroom = () => {
 
       {/* 2. DESKTOP ONLY IMAGE (Right Column) */}
       <DesktopIllustration>
-        <img src="/dd-5.png" alt="Architectural Blueprint" />
+        <img src="/dd7.png" alt="Architectural Blueprint" />
       </DesktopIllustration>
 
       {/* 3. Scroll Indicator */}
