@@ -1,5 +1,17 @@
 // src/pages/Rolodex.tsx
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+import { useState } from 'react';
+
+// --- ANIMATIONS ---
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const slideUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
 
 // --- STYLES ---
 const Section = styled.section`
@@ -15,8 +27,6 @@ const Section = styled.section`
   background-image: url('/dd-3.png');
   background-size: cover;
   background-position: center;
-
-
 `;
 
 const VignetteOverlay = styled.div`
@@ -136,8 +146,120 @@ const Copyright = styled.span`
   letter-spacing: 0.1em;
 `;
 
+/* --- WHATSAPP MODAL STYLES --- */
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  animation: ${fadeIn} 0.3s ease;
+`;
+
+const ModalBox = styled.div`
+  background: #111;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 0 50px rgba(0,0,0,0.8);
+  animation: ${slideUp} 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const ModalHeader = styled.h3`
+  font-family: ${({ theme }) => theme.fonts.mono};
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.muted};
+  padding-bottom: 1rem;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  height: 150px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid ${({ theme }) => theme.colors.muted};
+  color: ${({ theme }) => theme.colors.text};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 1rem;
+  padding: 1rem;
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.secondary};
+    opacity: 0.5;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+`;
+
+const ModalButton = styled.button<{ $primary?: boolean }>`
+  background: ${({ $primary, theme }) => $primary ? theme.colors.primary : 'transparent'};
+  color: ${({ $primary, theme }) => $primary ? theme.colors.background : theme.colors.secondary};
+  border: 1px solid ${({ $primary, theme }) => $primary ? theme.colors.primary : theme.colors.muted};
+  padding: 0.8rem 1.5rem;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${({ $primary, theme }) => $primary ? '#fff' : 'rgba(255,255,255,0.05)'};
+    color: ${({ $primary }) => $primary ? '#000' : '#fff'};
+    transform: translateY(-2px);
+  }
+`;
+
 // --- COMPONENT ---
 export const Rolodex = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleOpen = (e: React.MouseEvent) => {
+    e.preventDefault(); // Stop default link behavior
+    setIsModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleTransmit = () => {
+    // 1. Format the message
+    const encodedMessage = encodeURIComponent(message);
+    // 2. Your number
+    const phoneNumber = "27660857813"; 
+    
+    // 3. Open WhatsApp API
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+    
+    // 4. Close modal
+    setIsModalOpen(false);
+    setMessage('');
+  };
+
   return (
     <Section>
       <VignetteOverlay />
@@ -151,6 +273,11 @@ export const Rolodex = () => {
         </SubText>
 
         <LinkContainer>
+          {/* WhatsApp triggers the modal now */}
+          <ContactButton href="#" onClick={handleOpen}>
+            WhatsApp
+          </ContactButton>
+
           <ContactButton href="mailto:azaraiamorake@gmail.com">
             Mail
           </ContactButton>
@@ -164,6 +291,26 @@ export const Rolodex = () => {
           </ContactButton>
         </LinkContainer>
       </ContentContainer>
+
+      {/* --- THE TRANSMISSION MODAL --- */}
+      {isModalOpen && (
+        <ModalOverlay onClick={handleClose}>
+          {/* Stop propagation so clicking the box doesn't close it */}
+          <ModalBox onClick={(e) => e.stopPropagation()}>
+            <ModalHeader>Secure Transmission</ModalHeader>
+            <TextArea 
+              placeholder="Enter your brief..." 
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              autoFocus
+            />
+            <ButtonGroup>
+              <ModalButton onClick={handleClose}>Abort</ModalButton>
+              <ModalButton $primary onClick={handleTransmit}>Transmit</ModalButton>
+            </ButtonGroup>
+          </ModalBox>
+        </ModalOverlay>
+      )}
 
       <Footer>
         <Copyright>JHB / REMOTE — © {new Date().getFullYear()} DD.</Copyright>
