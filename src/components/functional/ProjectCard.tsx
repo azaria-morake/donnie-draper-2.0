@@ -33,11 +33,10 @@ const Card = styled.article<{ $isActive: boolean }>`
   /* DESKTOP: Side-by-Side Row */
   @media (min-width: 769px) {
     flex-direction: row; 
-    align-items: stretch; /* Stretch image to match content height */
-    min-height: 320px;    /* Ensure square image look */
+    align-items: stretch; 
+    min-height: 320px;    
   }
 
-  /* Hover (Desktop) */
   @media (hover: hover) {
     &:hover {
       transform: translateY(-5px);
@@ -46,7 +45,6 @@ const Card = styled.article<{ $isActive: boolean }>`
     }
   }
 
-  /* Active (Expanded on Mobile / Highlighted on Desktop) */
   ${({ $isActive, theme }) => $isActive && css`
     transform: translateY(-5px);
     border-color: ${theme.colors.primary};
@@ -64,7 +62,6 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
   filter: grayscale(100%) brightness(0.8);
   transform: scale(1);
 
-  /* Desktop Hover: Colorize */
   ${Card}:hover & {
     @media (hover: hover) {
       filter: grayscale(0%);
@@ -72,7 +69,6 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
     }
   }
 
-  /* Active State: Colorize */
   ${({ $isActive }) => $isActive && css`
     filter: grayscale(0%) !important;
     transform: scale(1.05) !important;
@@ -80,19 +76,17 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
 `;
 
 const ImageArea = styled.div`
-  /* MOBILE: Top Section */
   height: 300px; 
   width: 100%;
   background-color: #0f0f0f;
   border-bottom: 1px solid ${({ theme }) => theme.colors.muted};
   overflow: hidden;
   position: relative;
-  flex-shrink: 0; /* Don't let flexbox squish the image */
+  flex-shrink: 0; 
 
-  /* DESKTOP: Left Column */
   @media (min-width: 769px) {
-    width: 320px; /* Fixed width for the "Square" look */
-    height: auto; /* Fill height of card */
+    width: 320px; 
+    height: auto; 
     border-bottom: none;
     border-right: 1px solid ${({ theme }) => theme.colors.muted};
   }
@@ -119,29 +113,26 @@ const OverlayTitle = styled.h3<{ $isActive: boolean }>`
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 
-  /* HIDE ON DESKTOP (Title is in the content area) */
   @media (min-width: 769px) {
     display: none;
   }
 `;
 
 const ContentDrawer = styled.div<{ $isActive: boolean }>`
-  /* MOBILE: Collapsible Drawer */
   max-height: ${({ $isActive }) => ($isActive ? '1000px' : '0')};
   opacity: ${({ $isActive }) => ($isActive ? '1' : '0')};
   overflow: hidden;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
   background: ${({ theme }) => theme.colors.background};
 
-  /* DESKTOP: Always Open, Right Column */
   @media (min-width: 769px) {
     max-height: none;
     opacity: 1;
     overflow: visible;
-    flex-grow: 1; /* Take remaining width */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
+    justify-content: center; 
   }
 `;
 
@@ -236,8 +227,6 @@ export const ProjectCard = ({
   const isMounted = useRef(false);
 
   useEffect(() => {
-    // Only run this logic on Mobile/Tablet where expansion is needed
-    // We check window width to prevent auto-scrolling on desktop layout
     const isMobile = window.innerWidth <= 768;
 
     if (!isMounted.current) {
@@ -245,7 +234,8 @@ export const ProjectCard = ({
       return;
     }
 
-    if (isMobile && isActive && cardRef.current) {
+    // UPDATED LOGIC: Run if mobile AND ref exists (removed && isActive)
+    if (isMobile && cardRef.current) {
       const timer = setTimeout(() => {
         cardRef.current?.scrollIntoView({
           behavior: 'smooth',
@@ -255,7 +245,7 @@ export const ProjectCard = ({
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isActive]);
+  }, [isActive]); // Triggers on both OPEN and CLOSE
 
   return (
     <Card 
@@ -264,12 +254,10 @@ export const ProjectCard = ({
       $isActive={isActive}
     >
       <ImageArea>
-        {/* Mobile Indicator */}
         <TapIndicator>
           <span>{isActive ? "Tap To Close" : "Tap To Expand"}</span>
         </TapIndicator>
 
-        {/* Mobile Overlay Title (Hidden on Desktop) */}
         <OverlayTitle $isActive={isActive}>
           {title}
         </OverlayTitle>

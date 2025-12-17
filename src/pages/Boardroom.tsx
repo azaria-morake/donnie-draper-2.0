@@ -43,6 +43,7 @@ const ContentSide = styled.div`
     align-items: center;
     text-align: center;
     width: 100%;
+    margin-bottom: 8rem; /* Spacing before image */
   }
 `;
 
