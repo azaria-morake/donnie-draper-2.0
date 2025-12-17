@@ -18,17 +18,18 @@ const Wrapper = styled.section`
   min-height: 100vh;
   width: 100%;
   display: grid;
-  grid-template-columns: 1.2fr 1fr; /* Text gets slightly more space */
+  grid-template-columns: 1.2fr 1fr; /* Desktop: Text Left | Image Right */
   align-items: center;
   padding: 0 4rem;
   position: relative;
   overflow: hidden;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
-    padding: 1rem 2rem 2rem 2rem;
-    text-align: center;
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 2rem 2rem 2rem;
+    gap: 0; /* Gap handled by internal margins */
   }
 `;
 
@@ -40,11 +41,13 @@ const ContentSide = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     align-items: center;
-    margin-bottom: 50px;
+    text-align: center;
+    width: 100%;
   }
 `;
 
-const IllustrationSide = styled.div`
+// 1. DESKTOP IMAGE (Hidden on Mobile)
+const DesktopIllustration = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
@@ -53,10 +56,9 @@ const IllustrationSide = styled.div`
   position: relative;
   opacity: 0;
   animation: ${riseUp} 1.5s ease-out forwards 0.5s;
-  //margin-top: -4rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    margin-top: -1rem;
+    display: none; /* HIDE ON MOBILE */
   }
 
   img {
@@ -64,10 +66,36 @@ const IllustrationSide = styled.div`
     max-width: 600px;
     height: auto;
     object-fit: contain;
-    /* Noir Filter: Grayscale + High Contrast */
     filter: grayscale(100%) contrast(1.2) brightness(0.8);
-    mix-blend-mode: lighten; /* Blends nicely with dark bg */
+    mix-blend-mode: lighten;
     mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  }
+`;
+
+// 2. MOBILE IMAGE (Hidden on Desktop)
+const MobileIllustration = styled.div`
+  display: none; /* HIDE ON DESKTOP */
+  width: 100%;
+  margin: 0rem 0; /* Spacing between Headline and Subheadline */
+  opacity: 0;
+  animation: ${riseUp} 1.5s ease-out forwards 0.5s;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    display: flex;
+    justify-content: center;
+    height: 35vh; /* Controlled height for mobile */
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%) contrast(1.2) brightness(0.8);
+    mix-blend-mode: lighten;
+    
+    /* Added -webkit- prefix for mobile Safari/Chrome support */
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
   }
 `;
 
@@ -87,9 +115,14 @@ const Headline = styled.h1`
   font-size: clamp(2.7rem, 6vw, 5.5rem);
   color: ${({ theme }) => theme.colors.text};
   line-height: 1;
-  margin-bottom: 2rem;
+  margin-bottom: 0; /* Margin handled by MobileImage on mobile */
   opacity: 0;
   animation: ${riseUp} 1s ease-out forwards 0.3s;
+  
+  /* Desktop margin */
+  @media (min-width: 769px) {
+    margin-bottom: 2rem;
+  }
 `;
 
 const SubHeadline = styled.p`
@@ -101,20 +134,16 @@ const SubHeadline = styled.p`
   opacity: 0;
   animation: ${riseUp} 1s ease-out forwards 0.6s;
 
-
   strong {
     font-weight: 600;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding-top: 1rem;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const ScrollIndicator = styled.div`
   position: absolute;
-  bottom: 7rem;
-  left: 50%; /* Center strictly */
+  bottom: 2rem;
+  left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -135,6 +164,7 @@ const Label = styled.span`
 
 const Line = styled.div`
   width: 1px;
+  height: 60px;
   background: ${({ theme }) => theme.colors.primary};
   animation: ${smokeFade} 2.5s infinite ease-in-out;
 `;
@@ -143,32 +173,35 @@ const Line = styled.div`
 export const Boardroom = () => {
   return (
     <Wrapper>
-
-
-    
+      {/* 1. Content Block */}
       <ContentSide>
-        <PreHeader> <span style={{ color: '#64748B' }}>Call</span> Donnie Draper </PreHeader>
+        <PreHeader>
+          <span style={{ color: '#64748B' }}>Call</span> Donnie Draper
+        </PreHeader>
+        
         <Headline>
           The Blueprint <br />
           <span style={{ color: '#64748B' }}>Before The Build.</span>
         </Headline>
 
-        <IllustrationSide>
-        {/* Architecture/Drafting Image */}
-        <img 
-          src="/dd-1.jpg" 
-          alt="Architectural Blueprint" 
-        />
-      </IllustrationSide>
-      <SubHeadline>
-  <strong>Good architecture isn’t scalable code. It’s scalable decisions.</strong>
-  <br />   <br />
-  If the blueprint is honest, the build cannot even begin to lie.
-</SubHeadline>
+        {/* --- MOBILE ONLY IMAGE (Inserted Here) --- */}
+        <MobileIllustration>
+          <img src="/dd-5.png" alt="Architectural Blueprint" />
+        </MobileIllustration>
+
+        <SubHeadline>
+          <strong>Good architecture isn’t scalable code. It’s scalable decisions.</strong>
+          <br /><br />
+          If the blueprint is honest, the build cannot even begin to lie.
+        </SubHeadline>
       </ContentSide>
 
+      {/* 2. DESKTOP ONLY IMAGE (Right Column) */}
+      <DesktopIllustration>
+        <img src="/dd-5.png" alt="Architectural Blueprint" />
+      </DesktopIllustration>
 
-      
+      {/* 3. Scroll Indicator */}
       <ScrollIndicator>
         <Label>Inspect</Label>
         <Line />

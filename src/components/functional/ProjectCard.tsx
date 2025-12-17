@@ -20,14 +20,22 @@ const Card = styled.article<{ $isActive: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.muted};
   box-shadow: 12px 12px 0px rgba(20, 20, 20, 0.4); 
   display: flex;
+  
+  /* MOBILE: Stacked Vertical */
   flex-direction: column;
   width: 100%;
-  min-width: 300px; 
   position: relative;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   overflow: hidden;
+
+  /* DESKTOP: Side-by-Side Row */
+  @media (min-width: 769px) {
+    flex-direction: row; 
+    align-items: stretch; /* Stretch image to match content height */
+    min-height: 320px;    /* Ensure square image look */
+  }
 
   /* Hover (Desktop) */
   @media (hover: hover) {
@@ -38,7 +46,7 @@ const Card = styled.article<{ $isActive: boolean }>`
     }
   }
 
-  /* Active (Expanded) */
+  /* Active (Expanded on Mobile / Highlighted on Desktop) */
   ${({ $isActive, theme }) => $isActive && css`
     transform: translateY(-5px);
     border-color: ${theme.colors.primary};
@@ -56,6 +64,7 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
   filter: grayscale(100%) brightness(0.8);
   transform: scale(1);
 
+  /* Desktop Hover: Colorize */
   ${Card}:hover & {
     @media (hover: hover) {
       filter: grayscale(0%);
@@ -63,6 +72,7 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
     }
   }
 
+  /* Active State: Colorize */
   ${({ $isActive }) => $isActive && css`
     filter: grayscale(0%) !important;
     transform: scale(1.05) !important;
@@ -70,12 +80,22 @@ const StyledImage = styled.img<{ $isActive: boolean }>`
 `;
 
 const ImageArea = styled.div`
+  /* MOBILE: Top Section */
   height: 300px; 
   width: 100%;
   background-color: #0f0f0f;
   border-bottom: 1px solid ${({ theme }) => theme.colors.muted};
   overflow: hidden;
   position: relative;
+  flex-shrink: 0; /* Don't let flexbox squish the image */
+
+  /* DESKTOP: Left Column */
+  @media (min-width: 769px) {
+    width: 320px; /* Fixed width for the "Square" look */
+    height: auto; /* Fill height of card */
+    border-bottom: none;
+    border-right: 1px solid ${({ theme }) => theme.colors.muted};
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     height: auto;
@@ -98,20 +118,39 @@ const OverlayTitle = styled.h3<{ $isActive: boolean }>`
   transform: translateY(${({ $isActive }) => ($isActive ? '20px' : '0')});
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
+
+  /* HIDE ON DESKTOP (Title is in the content area) */
+  @media (min-width: 769px) {
+    display: none;
+  }
 `;
 
 const ContentDrawer = styled.div<{ $isActive: boolean }>`
+  /* MOBILE: Collapsible Drawer */
   max-height: ${({ $isActive }) => ($isActive ? '1000px' : '0')};
   opacity: ${({ $isActive }) => ($isActive ? '1' : '0')};
   overflow: hidden;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
   background: ${({ theme }) => theme.colors.background};
+
+  /* DESKTOP: Always Open, Right Column */
+  @media (min-width: 769px) {
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    flex-grow: 1; /* Take remaining width */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+  }
 `;
 
 const InnerContent = styled.div`
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  justify-content: center;
 `;
 
 const Title = styled.h3`
@@ -194,26 +233,26 @@ export const ProjectCard = ({
 }: ProjectProps) => {
   
   const cardRef = useRef<HTMLElement>(null);
-  const isMounted = useRef(false); // Track initial render
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    // Skip logic on first render to prevent page jumping on load
+    // Only run this logic on Mobile/Tablet where expansion is needed
+    // We check window width to prevent auto-scrolling on desktop layout
+    const isMobile = window.innerWidth <= 768;
+
     if (!isMounted.current) {
       isMounted.current = true;
       return;
     }
 
-    if (cardRef.current) {
-      // Logic for both OPENING and CLOSING
-      // We use a timeout to let the CSS transition start/finish
+    if (isMobile && isActive && cardRef.current) {
       const timer = setTimeout(() => {
         cardRef.current?.scrollIntoView({
           behavior: 'smooth',
-          block: 'center', // Centers the card vertically
-          inline: 'center' // Centers the card horizontally
+          block: 'center',
+          inline: 'center'
         });
-      }, 300); // 300ms matches the transition flow nicely
-
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isActive]);
@@ -225,10 +264,12 @@ export const ProjectCard = ({
       $isActive={isActive}
     >
       <ImageArea>
+        {/* Mobile Indicator */}
         <TapIndicator>
           <span>{isActive ? "Tap To Close" : "Tap To Expand"}</span>
         </TapIndicator>
 
+        {/* Mobile Overlay Title (Hidden on Desktop) */}
         <OverlayTitle $isActive={isActive}>
           {title}
         </OverlayTitle>

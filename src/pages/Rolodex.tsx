@@ -47,7 +47,7 @@ const Headline = styled.h2`
 
 const SubText = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.primary};
   font-size: 1.2rem;
   margin-bottom: 4rem;
   opacity: 0.8;
@@ -144,11 +144,10 @@ export const Rolodex = () => {
       
       <ContentContainer>
         <Headline>
-          The idea is ready. <br />
-          Are you?
+          Your idea is brilliant.
         </Headline>
         <SubText>
-          Don't let it go to waste. Make the call.
+          Bring it to life. Make the call.
         </SubText>
 
         <LinkContainer>
