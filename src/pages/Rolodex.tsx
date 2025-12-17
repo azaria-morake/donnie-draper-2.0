@@ -1,5 +1,5 @@
 // src/pages/Rolodex.tsx
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useState } from 'react';
 
 // --- ANIMATIONS ---
@@ -226,7 +226,7 @@ const ModalButton = styled.button<{ $primary?: boolean }>`
   transition: all 0.3s ease;
 
   &:hover {
-    background: ${({ $primary, theme }) => $primary ? '#fff' : 'rgba(255,255,255,0.05)'};
+    background: ${({ $primary }) => $primary ? '#fff' : 'rgba(255,255,255,0.05)'};
     color: ${({ $primary }) => $primary ? '#000' : '#fff'};
     transform: translateY(-2px);
   }
