@@ -297,7 +297,7 @@ export const Rolodex = () => {
         <ModalOverlay onClick={handleClose}>
           {/* Stop propagation so clicking the box doesn't close it */}
           <ModalBox onClick={(e) => e.stopPropagation()}>
-            <ModalHeader>Secure Transmission</ModalHeader>
+            <ModalHeader>Send WhatsApp Message</ModalHeader>
             <TextArea 
               placeholder="Enter your brief..." 
               value={message}
@@ -306,7 +306,7 @@ export const Rolodex = () => {
             />
             <ButtonGroup>
               <ModalButton onClick={handleClose}>Abort</ModalButton>
-              <ModalButton $primary onClick={handleTransmit}>Transmit</ModalButton>
+              <ModalButton $primary onClick={handleTransmit}>Send</ModalButton>
             </ButtonGroup>
           </ModalBox>
         </ModalOverlay>
