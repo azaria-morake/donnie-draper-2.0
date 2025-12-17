@@ -286,9 +286,6 @@ export const Rolodex = () => {
             LinkedIn
           </ContactButton>
           
-          <ContactButton href="https://github.com/azaria-morake" target="_blank">
-            GitHub
-          </ContactButton>
         </LinkContainer>
       </ContentContainer>
 
