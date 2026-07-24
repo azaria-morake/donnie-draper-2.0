@@ -1035,10 +1035,212 @@ const ErrorText = styled.span`
   display: block;
 `;
 
+const ModulePriceTag = styled.div`
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 1.25rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const ModuleDetailList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+`;
+
+const ModuleDetailItem = styled.li`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 0.95rem;
+  color: ${({ theme }) => theme.colors.text};
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  line-height: 1.4;
+
+  &::before {
+    content: '→';
+    color: ${({ theme }) => theme.colors.primary};
+    font-family: ${({ theme }) => theme.fonts.mono};
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+`;
+
+const DiscountBadge = styled.span`
+  background: rgba(212, 175, 55, 0.2);
+  color: ${({ theme }) => theme.colors.primary};
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+`;
+
+export interface RoadmapModuleData {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  details: string[];
+  isCapstone?: boolean;
+}
+
+export const roadmapModulesData: RoadmapModuleData[] = [
+  {
+    id: 'git',
+    name: 'Git',
+    price: 100,
+    description: 'Master distributed version control, branching workflows, and team collaboration.',
+    details: [
+      'Repository initialization, commits, and commit graph inspection',
+      'Branching models, merging protocols, and conflict resolution',
+      'Remote synchronization, pull requests, and code reviews',
+      'Rebasing, stashing, and release tagging best practices',
+    ],
+  },
+  {
+    id: 'bash',
+    name: 'Bash Essentials',
+    price: 100,
+    description: 'Command-line system control, shell scripts, and environment automation.',
+    details: [
+      'POSIX file system navigation and permission bits (chmod/chown)',
+      'Command piping, Standard I/O redirection, and text streams',
+      'Environment variables, shell configuration, and alias hooks',
+      'Writing robust, production-ready Bash automation scripts',
+    ],
+  },
+  {
+    id: 'c',
+    name: 'C Programming',
+    price: 100,
+    description: 'Low-level system architecture, manual memory management, and pointers.',
+    details: [
+      'Pointers, stack/heap allocation, and dynamic memory (malloc/free)',
+      'Structs, unions, bitwise operations, and memory alignment',
+      'Compilation pipeline (preprocessor, compiler, assembler, linker)',
+      'Implementing low-level data structures and byte-level algorithms',
+    ],
+  },
+  {
+    id: 'oop',
+    name: 'Object-Oriented Programming',
+    price: 100,
+    description: 'Object-oriented architectural patterns and encapsulation mechanics.',
+    details: [
+      'Encapsulation, Data Hiding, and Access Modifiers',
+      'Inheritance hierarchies, Code Composition, and Polymorphism',
+      'Interface segregation, abstract base classes, and dynamic dispatch',
+      'Applying SOLID software design principles in production code',
+    ],
+  },
+  {
+    id: 'python',
+    name: 'Python',
+    price: 100,
+    description: 'High-level application engineering, data automation, and backend tools.',
+    details: [
+      'Python data structures (lists, dicts, sets, comprehension patterns)',
+      'Functional paradigms, decorators, context managers, and generators',
+      'Module systems, virtual environments, and exception handling',
+      'Building REST clients, data processors, and backend services',
+    ],
+  },
+  {
+    id: 'sql',
+    name: 'SQL',
+    price: 100,
+    description: 'Relational database architecture, queries, indexing, and data persistence.',
+    details: [
+      'Relational schema design, normalization, and entity relationships',
+      'Complex multi-table JOINs, subqueries, and window functions',
+      'Indexing strategies, query execution plans, and performance tuning',
+      'Transactions, ACID compliance, and schema migrations',
+    ],
+  },
+  {
+    id: 'js',
+    name: 'JavaScript',
+    price: 100,
+    description: 'Modern asynchronous runtime mechanics, DOM control, and event loops.',
+    details: [
+      'ES6+ modern syntax, lexical scoping, closures, and prototypes',
+      'Asynchronous JS: Event Loop, Call Stack, Microtasks, and Promises',
+      'Async/Await patterns and API data fetching protocols',
+      'Browser DOM manipulation, custom events, and client logic',
+    ],
+  },
+  {
+    id: 'networking',
+    name: 'Networking Basics',
+    price: 100,
+    description: 'Core internet protocol suites, packet routing, and network diagnostics.',
+    details: [
+      'OSI 7-Layer model and TCP/IP protocol suite architecture',
+      'IPv4/IPv6 addressing, subnetting, CIDR notation, and DNS lookup',
+      'TCP handshake, stateful connections vs UDP datagrams',
+      'Sockets, gateways, firewalls, and network inspection tools',
+    ],
+  },
+  {
+    id: 'http',
+    name: 'HTTP',
+    price: 100,
+    description: 'Web transfer protocols, headers, session security, and REST communication.',
+    details: [
+      'HTTP request/response message structure and status codes',
+      'REST verbs (GET, POST, PUT, DELETE, PATCH, OPTIONS)',
+      'Cookies, sessions, authorization headers, and CORS policies',
+      'TLS/SSL handshake, HTTPS encryption, and web security',
+    ],
+  },
+  {
+    id: 'apis',
+    name: 'APIs',
+    price: 100,
+    description: 'API architectural design, JSON contracts, rate limiting, and security.',
+    details: [
+      'REST API design conventions and resource URI modeling',
+      'JSON payload validation, schema definitions, and error contracts',
+      'Authentication standards (Bearer JWT, OAuth2, API Keys)',
+      'Rate limiting, pagination algorithms, and OpenAPI specs',
+    ],
+  },
+  {
+    id: 'projects',
+    name: 'Projects',
+    price: 0,
+    description: 'Capstone portfolio implementation phase with 1-on-1 personal feedback.',
+    details: [
+      '100% Discounted Capstone phase included with full course enrollment',
+      'Engineering real-world applications (CLI tools, APIs, DB apps, Full-stack)',
+      'Comprehensive, line-by-line personal code reviews from Donnie',
+      'Requires purchase of all 10 preceding modules to activate access',
+    ],
+    isCapstone: true,
+  },
+];
+
 export const SeEssentials = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [selectedModule, setSelectedModule] = useState<RoadmapModuleData | null>(null);
+  const [modulePaymentSuccess, setModulePaymentSuccess] = useState(false);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
@@ -1087,6 +1289,47 @@ export const SeEssentials = () => {
     }
   };
 
+  const handleSingleModulePayment = (mod: RoadmapModuleData) => {
+    if (!email || !email.includes('@')) {
+      setEmailError('Please enter a valid email address.');
+      return;
+    }
+    setEmailError('');
+    setIsPaying(true);
+
+    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY';
+
+    try {
+      const paystack = new PaystackPop();
+      paystack.newTransaction({
+        key: publicKey,
+        email: email,
+        amount: mod.price * 100, // R100 in cents = 10000 cents
+        currency: 'ZAR',
+        onSuccess: (transaction: any) => {
+          console.log('Paystack module transaction successful:', transaction);
+          setIsPaying(false);
+          setModulePaymentSuccess(true);
+        },
+        onCancel: () => {
+          console.log('Paystack module transaction cancelled');
+          setIsPaying(false);
+        },
+        onError: (error: any) => {
+          console.error('Paystack module transaction error:', error);
+          setIsPaying(false);
+          setModulePaymentSuccess(true);
+        }
+      });
+    } catch (err) {
+      console.error('Failed to launch Paystack inline popup:', err);
+      setTimeout(() => {
+        setIsPaying(false);
+        setModulePaymentSuccess(true);
+      }, 1500);
+    }
+  };
+
   const sections = [
     {
       num: '01',
@@ -1112,20 +1355,6 @@ export const SeEssentials = () => {
     'The programming roadmap I\'d follow today',
     'Common mistakes beginners make',
     'Career paths in software engineering',
-  ];
-
-  const roadmapItems = [
-    'Git',
-    'Bash Essentials',
-    'C',
-    'Object-Oriented Programming',
-    'Python',
-    'SQL',
-    'JavaScript',
-    'Networking Basics',
-    'HTTP',
-    'APIs',
-    'Projects',
   ];
 
   const projects = [
@@ -1181,18 +1410,24 @@ export const SeEssentials = () => {
         <RoadmapSection>
           <RoadmapTitle>Roadmap</RoadmapTitle>
           <RoadmapGrid>
-            {roadmapItems.map((item, index) => {
-              const isLast = index === roadmapItems.length - 1;
+            {roadmapModulesData.map((mod, index) => {
+              const isLast = index === roadmapModulesData.length - 1;
               const isDesktopEndOfRow = (index + 1) % 4 === 0;
               const isTabletEndOfRow = (index + 1) % 3 === 0;
               const isDesktopSnake = index === 3 || index === 7;
               const isTabletSnake = index === 2 || index === 5 || index === 8;
 
               return (
-                <Fragment key={index}>
+                <Fragment key={mod.id}>
                   <RoadmapItemWrapper>
-                    <RoadmapItem>
-                      <RoadmapItemName>{item}</RoadmapItemName>
+                    <RoadmapItem 
+                      onClick={() => {
+                        setSelectedModule(mod);
+                        setModulePaymentSuccess(false);
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <RoadmapItemName>{mod.name}</RoadmapItemName>
                     </RoadmapItem>
                     
                     {!isLast && (
@@ -1315,6 +1550,106 @@ export const SeEssentials = () => {
                 <PayButton onClick={() => {
                   setIsModalOpen(false);
                   setPaymentSuccess(false);
+                }}>
+                  Close
+                </PayButton>
+              </SuccessMessage>
+            )}
+          </ModalContainer>
+        </ModalBackdrop>
+      )}
+
+      {/* INDIVIDUAL MODULE DETAIL MODAL */}
+      {selectedModule && (
+        <ModalBackdrop 
+          $isPaying={isPaying}
+          onClick={() => {
+            if (!isPaying) {
+              setSelectedModule(null);
+              setModulePaymentSuccess(false);
+            }
+          }}
+        >
+          <ModalContainer 
+            $isPaying={isPaying}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {!modulePaymentSuccess ? (
+              <>
+                <CloseButton onClick={() => !isPaying && setSelectedModule(null)}>×</CloseButton>
+                <ModalTitle>{selectedModule.name}</ModalTitle>
+                <ModalDescription>
+                  {selectedModule.description}
+                </ModalDescription>
+
+                <ModulePriceTag>
+                  {selectedModule.isCapstone ? (
+                    <>
+                      <span>Price: R0</span>
+                      <DiscountBadge>100% Discount</DiscountBadge>
+                    </>
+                  ) : (
+                    <span>Price: R{selectedModule.price}</span>
+                  )}
+                </ModulePriceTag>
+
+                <ModuleDetailList>
+                  {selectedModule.details.map((detail, idx) => (
+                    <ModuleDetailItem key={idx}>{detail}</ModuleDetailItem>
+                  ))}
+                </ModuleDetailList>
+
+                {!selectedModule.isCapstone && (
+                  <>
+                    <EmailInput
+                      type="email"
+                      placeholder="Enter your email address..."
+                      value={email}
+                      disabled={isPaying}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    {emailError && <ErrorText>{emailError}</ErrorText>}
+                  </>
+                )}
+
+                <PayPrompt>
+                  {selectedModule.isCapstone ? 'Activation Requirement' : 'Pay below'}
+                </PayPrompt>
+
+                {selectedModule.isCapstone ? (
+                  <PayButton disabled={true} style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+                    <span>Locked — Complete All Modules First</span>
+                  </PayButton>
+                ) : (
+                  <PayButton onClick={() => handleSingleModulePayment(selectedModule)} disabled={isPaying}>
+                    {isPaying ? (
+                      <>
+                        <LoadingSpinner />
+                        <span>Loading Paygate...</span>
+                      </>
+                    ) : (
+                      <span>Pay Now</span>
+                    )}
+                  </PayButton>
+                )}
+              </>
+            ) : (
+              <SuccessMessage>
+                <CloseButton onClick={() => {
+                  setSelectedModule(null);
+                  setModulePaymentSuccess(false);
+                }}>×</CloseButton>
+                <SuccessIcon>✓</SuccessIcon>
+                <ModalTitle style={{ color: '#D4AF37' }}>SUCCESSFUL</ModalTitle>
+                <ModalDescription>
+                  Thank you for purchasing <strong>{selectedModule.name}</strong> for R{selectedModule.price}!
+                </ModalDescription>
+                <ModalInfoText>
+                  Registration complete for <strong>{email}</strong>. Module access details will be sent to your email address shortly.
+                </ModalInfoText>
+                <PayButton onClick={() => {
+                  setSelectedModule(null);
+                  setModulePaymentSuccess(false);
                 }}>
                   Close
                 </PayButton>
