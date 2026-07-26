@@ -7,9 +7,9 @@ declare module '@paystack/inline-js' {
       amount: number;
       currency?: string;
       ref?: string;
-      onSuccess?: (transaction: any) => void;
+      onSuccess?: (transaction: unknown) => void;
       onCancel?: () => void;
-      onError?: (error: any) => void;
+      onError?: (error: unknown) => void;
     }): void;
     resumeTransaction(accessCode: string): void;
   }

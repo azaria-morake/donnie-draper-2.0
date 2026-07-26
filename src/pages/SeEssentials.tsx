@@ -33,6 +33,27 @@ const gridFade = keyframes`
   to { opacity: 1; }
 `;
 
+const pulse = keyframes`
+  0% {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 0 0px rgba(212, 175, 55, 0.5);
+  }
+  70% {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 0 12px rgba(212, 175, 55, 0);
+  }
+  100% {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 0 0px rgba(212, 175, 55, 0);
+  }
+`;
+
+const shine = keyframes`
+  0% {
+    left: -100%;
+  }
+  20%, 100% {
+    left: 100%;
+  }
+`;
+
 // --- STYLES ---
 const PageContainer = styled.section`
   min-height: 100vh;
@@ -78,6 +99,7 @@ const MainTitle = styled.h1`
   text-align: center;
   letter-spacing: -0.03em;
   line-height: 1.1;
+  margin-top: 1rem;
 
   @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
     white-space: nowrap; /* Spans a single line on desktop */
@@ -88,8 +110,8 @@ const MainDescription = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 1.2rem;
   color: ${({ theme }) => theme.colors.secondary};
-  text-align: center;
-  max-width: 600px;
+  text-align: left;
+  max-width: 800px;
   margin-bottom: 3.5rem;
 `;
 
@@ -119,61 +141,6 @@ const VideoContainer = styled.div`
   }
 `;
 
-const PlayButton = styled.div`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(18, 18, 18, 0.8);
-  border: 2px solid ${({ theme }) => theme.colors.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 2;
-
-  svg {
-    fill: ${({ theme }) => theme.colors.primary};
-    width: 24px;
-    height: 24px;
-    margin-left: 4px;
-    transition: all 0.3s ease;
-  }
-
-  ${VideoContainer}:hover & {
-    background: ${({ theme }) => theme.colors.primary};
-    transform: scale(1.1);
-
-    svg {
-      fill: ${({ theme }) => theme.colors.background};
-    }
-  }
-`;
-
-const VideoLabel = styled.span`
-  margin-top: 1.5rem;
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.secondary};
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  z-index: 2;
-  transition: color 0.3s ease;
-
-  ${VideoContainer}:hover & {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
-const VideoGridBackground = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
-  background-size: 30px 30px;
-  background-position: center;
-  opacity: 0.4;
-`;
 
 const ListSection = styled.div`
   width: 100%;
@@ -231,6 +198,36 @@ const BulletItem = styled.li`
     font-family: ${({ theme }) => theme.fonts.mono};
     font-weight: bold;
     flex-shrink: 0;
+  }
+`;
+
+const StartingDateNote = styled.div`
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.primary};
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+  }
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: ${({ theme }) => theme.colors.primary};
+    border-radius: 50%;
+    box-shadow: 0 0 8px ${({ theme }) => theme.colors.primary};
+    animation: ${pulse} 2s infinite ease-in-out;
   }
 `;
 
@@ -409,40 +406,78 @@ const CtaImage = styled.img`
 
   ${CtaImageContainer}:hover & {
     transform: scale(1.05);
-    filter: brightness(0.6);
+    filter: brightness(0.9);
   }
 `;
 
+const CtaRightContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+`;
+
 const CtaButton = styled.button`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   background: ${({ theme }) => theme.colors.primary};
-  border: 1px solid ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.background};
-  padding: 1rem 2.2rem;
+  
+  /* Highlight border/outline to separate from the background */
+  border: 2px solid ${({ theme }) => theme.colors.background};
+  outline: 2px solid ${({ theme }) => theme.colors.primary};
+  outline-offset: -1px;
+  
+  padding: 0 2.6rem;
+  height: 54px;
   font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.85rem;
-  font-weight: bold;
+  font-size: 0.9rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
   z-index: 3;
   white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Pulse and transition animations */
+  animation: ${pulse} 2s infinite ease-in-out;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: ${shine} 4.5s infinite ease-in-out;
+  }
 
   &:hover {
-    background: transparent;
-    color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-    transform: translate(-50%, -52%) scale(1.05);
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.background};
+    outline-color: #ffffff;
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.8);
+    transform: scale(1.04);
   }
 
   &:active {
-    transform: translate(-50%, -48%) scale(0.98);
+    transform: scale(0.97);
   }
 `;
 
@@ -510,13 +545,22 @@ const RoadmapItem = styled.div`
   align-items: center;
   text-align: center;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 2;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05);
+  }
+
+  &.active {
+    @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+      border-color: ${({ theme }) => theme.colors.primary};
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 10px rgba(212, 175, 55, 0.1);
+      background: rgba(212, 175, 55, 0.08);
+      transform: scale(1.04);
+    }
   }
 `;
 
@@ -899,6 +943,17 @@ const ModalDescription = styled.p`
   margin-bottom: 1.5rem;
 `;
 
+const RoadmapModalTitle = styled(ModalTitle)`
+  text-align: left;
+  align-self: flex-start;
+`;
+
+const RoadmapModalDescription = styled(ModalDescription)`
+  text-align: left;
+  align-self: flex-start;
+  width: 100%;
+`;
+
 const ModalModulesRow = styled.div`
   font-family: ${({ theme }) => theme.fonts.mono};
   font-size: 0.95rem;
@@ -949,11 +1004,19 @@ const LoadingSpinner = styled.div`
 `;
 
 const PayButton = styled.button`
+  position: relative;
   background: ${({ theme }) => theme.colors.primary};
-  border: 1px solid ${({ theme }) => theme.colors.primary};
+  
+  /* Highlight border/outline to separate from the background */
+  border: 2px solid ${({ theme }) => theme.colors.background};
+  outline: 2px solid ${({ theme }) => theme.colors.primary};
+  outline-offset: -1px;
+  
   color: ${({ theme }) => theme.colors.background};
-  padding: 1rem 3rem;
+  padding: 0 3rem;
+  height: 54px;
   width: 100%;
+  flex-shrink: 0;
   font-family: ${({ theme }) => theme.fonts.mono};
   font-size: 0.95rem;
   font-weight: bold;
@@ -961,17 +1024,44 @@ const PayButton = styled.button`
   letter-spacing: 0.2em;
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  overflow: hidden;
+
+  /* Pulse and transition animations */
+  animation: ${pulse} 2s infinite ease-in-out;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: ${shine} 4.5s infinite ease-in-out;
+  }
 
   &:hover:not(:disabled) {
-    background: transparent;
-    color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.background};
+    outline-color: #ffffff;
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.8);
+    transform: scale(1.04);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
   }
 
   &:disabled {
@@ -1050,6 +1140,10 @@ const ModulePriceTag = styled.div`
   gap: 0.5rem;
 `;
 
+const RoadmapModulePriceTag = styled(ModulePriceTag)`
+  align-self: flex-start;
+`;
+
 const ModuleDetailList = styled.ul`
   list-style: none;
   padding: 0;
@@ -1090,7 +1184,7 @@ const DiscountBadge = styled.span`
   letter-spacing: 0.05em;
 `;
 
-export interface RoadmapModuleData {
+interface RoadmapModuleData {
   id: string;
   name: string;
   price: number;
@@ -1099,138 +1193,83 @@ export interface RoadmapModuleData {
   isCapstone?: boolean;
 }
 
-export const roadmapModulesData: RoadmapModuleData[] = [
+const roadmapModulesData: RoadmapModuleData[] = [
   {
     id: 'git',
     name: 'Git',
     price: 100,
-    description: 'Master distributed version control, branching workflows, and team collaboration.',
-    details: [
-      'Repository initialization, commits, and commit graph inspection',
-      'Branching models, merging protocols, and conflict resolution',
-      'Remote synchronization, pull requests, and code reviews',
-      'Rebasing, stashing, and release tagging best practices',
-    ],
+    description: "Learn the purpose of version control and why it's an essential part of modern software development. You'll become familiar with the basic Git workflow and begin using it from the start of your programming journey.",
+    details: [],
   },
   {
     id: 'bash',
     name: 'Bash Essentials',
     price: 100,
-    description: 'Command-line system control, shell scripts, and environment automation.',
-    details: [
-      'POSIX file system navigation and permission bits (chmod/chown)',
-      'Command piping, Standard I/O redirection, and text streams',
-      'Environment variables, shell configuration, and alias hooks',
-      'Writing robust, production-ready Bash automation scripts',
-    ],
+    description: "Get comfortable working in the command line. This foundation introduces the basic commands and workflows that software engineers use every day, preparing you for development environments you'll encounter throughout your career.",
+    details: [],
   },
   {
     id: 'c',
     name: 'C Programming',
     price: 100,
-    description: 'Low-level system architecture, manual memory management, and pointers.',
-    details: [
-      'Pointers, stack/heap allocation, and dynamic memory (malloc/free)',
-      'Structs, unions, bitwise operations, and memory alignment',
-      'Compilation pipeline (preprocessor, compiler, assembler, linker)',
-      'Implementing low-level data structures and byte-level algorithms',
-    ],
+    description: "Get an introduction to programming through C. You'll learn the basic building blocks of programming and gain an appreciation for how software works at a lower level without diving too deeply into advanced concepts.",
+    details: [],
   },
   {
     id: 'oop',
     name: 'Object-Oriented Programming',
     price: 100,
-    description: 'Object-oriented architectural patterns and encapsulation mechanics.',
-    details: [
-      'Encapsulation, Data Hiding, and Access Modifiers',
-      'Inheritance hierarchies, Code Composition, and Polymorphism',
-      'Interface segregation, abstract base classes, and dynamic dispatch',
-      'Applying SOLID software design principles in production code',
-    ],
+    description: "Understand the purpose of Object-Oriented Programming and why it's used to organise software. You'll be introduced to the core ideas behind classes, objects, and code organisation so these concepts feel familiar as you continue your studies.",
+    details: [],
   },
   {
     id: 'python',
     name: 'Python',
     price: 100,
-    description: 'High-level application engineering, data automation, and backend tools.',
-    details: [
-      'Python data structures (lists, dicts, sets, comprehension patterns)',
-      'Functional paradigms, decorators, context managers, and generators',
-      'Module systems, virtual environments, and exception handling',
-      'Building REST clients, data processors, and backend services',
-    ],
+    description: "Become familiar with Python by writing simple programs and applying the programming concepts you've already learned. This module is designed to help you become comfortable with the language, not to master it.",
+    details: [],
   },
   {
     id: 'sql',
     name: 'SQL',
     price: 100,
-    description: 'Relational database architecture, queries, indexing, and data persistence.',
-    details: [
-      'Relational schema design, normalization, and entity relationships',
-      'Complex multi-table JOINs, subqueries, and window functions',
-      'Indexing strategies, query execution plans, and performance tuning',
-      'Transactions, ACID compliance, and schema migrations',
-    ],
+    description: "Get an introduction to databases and learn how software stores and retrieves information. You'll write simple queries and become familiar with the role SQL plays in modern applications.",
+    details: [],
   },
   {
     id: 'js',
     name: 'JavaScript',
     price: 100,
-    description: 'Modern asynchronous runtime mechanics, DOM control, and event loops.',
-    details: [
-      'ES6+ modern syntax, lexical scoping, closures, and prototypes',
-      'Asynchronous JS: Event Loop, Call Stack, Microtasks, and Promises',
-      'Async/Await patterns and API data fetching protocols',
-      'Browser DOM manipulation, custom events, and client logic',
-    ],
+    description: "Explore the fundamentals of JavaScript and understand its role in web development. You'll write simple programs and gain enough exposure to confidently continue learning the language later.",
+    details: [],
   },
   {
     id: 'networking',
     name: 'Networking Basics',
     price: 100,
-    description: 'Core internet protocol suites, packet routing, and network diagnostics.',
-    details: [
-      'OSI 7-Layer model and TCP/IP protocol suite architecture',
-      'IPv4/IPv6 addressing, subnetting, CIDR notation, and DNS lookup',
-      'TCP handshake, stateful connections vs UDP datagrams',
-      'Sockets, gateways, firewalls, and network inspection tools',
-    ],
+    description: "Develop a basic understanding of how computers communicate over networks and the internet. These concepts provide useful context for web development, cloud computing, and modern software systems.",
+    details: [],
   },
   {
     id: 'http',
     name: 'HTTP',
     price: 100,
-    description: 'Web transfer protocols, headers, session security, and REST communication.',
-    details: [
-      'HTTP request/response message structure and status codes',
-      'REST verbs (GET, POST, PUT, DELETE, PATCH, OPTIONS)',
-      'Cookies, sessions, authorization headers, and CORS policies',
-      'TLS/SSL handshake, HTTPS encryption, and web security',
-    ],
+    description: "Learn the fundamentals of the protocol that powers the web. You'll become familiar with requests, responses, status codes, and the basic concepts behind communication between browsers and servers.",
+    details: [],
   },
   {
     id: 'apis',
     name: 'APIs',
     price: 100,
-    description: 'API architectural design, JSON contracts, rate limiting, and security.',
-    details: [
-      'REST API design conventions and resource URI modeling',
-      'JSON payload validation, schema definitions, and error contracts',
-      'Authentication standards (Bearer JWT, OAuth2, API Keys)',
-      'Rate limiting, pagination algorithms, and OpenAPI specs',
-    ],
+    description: "Understand what APIs are, why they exist, and how software applications communicate with one another. You'll gain introductory experience working with APIs and see how they're used in real-world software.",
+    details: [],
   },
   {
     id: 'projects',
     name: 'Projects',
     price: 0,
-    description: 'Capstone portfolio implementation phase with 1-on-1 personal feedback.',
-    details: [
-      '100% Discounted Capstone phase included with full course enrollment',
-      'Engineering real-world applications (CLI tools, APIs, DB apps, Full-stack)',
-      'Comprehensive, line-by-line personal code reviews from Donnie',
-      'Requires purchase of all 10 preceding modules to activate access',
-    ],
+    description: "Bring everything together through a series of small practical projects. Each project reinforces the foundations you've learned while helping you build confidence through hands-on practice.",
+    details: [],
     isCapstone: true,
   },
 ];
@@ -1243,9 +1282,59 @@ export const SeEssentials = () => {
   const [modulePaymentSuccess, setModulePaymentSuccess] = useState(false);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = 'SE Essentials - Donnie Draper';
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Only trigger logic on mobile / tablet (where the single column layout is active)
+      if (window.innerWidth > 768) {
+        setActiveModuleId(null);
+        return;
+      }
+
+      const elements = document.querySelectorAll('.roadmap-item-wrapper');
+      if (elements.length === 0) return;
+
+      const viewportCenter = window.innerHeight / 2;
+      let closestId: string | null = null;
+      let minDistance = Infinity;
+
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const elementCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(elementCenter - viewportCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestId = el.getAttribute('data-id');
+        }
+      });
+
+      // Disable glow if the roadmap section is completely scrolled out of view
+      const roadmapSection = document.querySelector('.roadmap-section-wrapper');
+      if (roadmapSection) {
+        const rect = roadmapSection.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+          setActiveModuleId(null);
+          return;
+        }
+      }
+
+      setActiveModuleId(closestId);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   const handlePaystackPayment = () => {
@@ -1265,7 +1354,7 @@ export const SeEssentials = () => {
         email: email,
         amount: 400 * 100, // R400 in cents (40000 cents)
         currency: 'ZAR',
-        onSuccess: (transaction: any) => {
+        onSuccess: (transaction: unknown) => {
           console.log('Paystack transaction successful:', transaction);
           setIsPaying(false);
           setPaymentSuccess(true);
@@ -1274,7 +1363,7 @@ export const SeEssentials = () => {
           console.log('Paystack transaction cancelled');
           setIsPaying(false);
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
           console.error('Paystack transaction error:', error);
           setIsPaying(false);
           setPaymentSuccess(true);
@@ -1306,7 +1395,7 @@ export const SeEssentials = () => {
         email: email,
         amount: mod.price * 100, // R100 in cents = 10000 cents
         currency: 'ZAR',
-        onSuccess: (transaction: any) => {
+        onSuccess: (transaction: unknown) => {
           console.log('Paystack module transaction successful:', transaction);
           setIsPaying(false);
           setModulePaymentSuccess(true);
@@ -1315,7 +1404,7 @@ export const SeEssentials = () => {
           console.log('Paystack module transaction cancelled');
           setIsPaying(false);
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
           console.error('Paystack module transaction error:', error);
           setIsPaying(false);
           setModulePaymentSuccess(true);
@@ -1371,16 +1460,17 @@ export const SeEssentials = () => {
       <HeroImage src="/se-essentials.png" alt="Software Engineering Essentials Hero" />
       <ContentWrapper>
         <MainTitle>Software Engineering Essentials</MainTitle>
-        <MainDescription>A free introduction to becoming a software engineer.</MainDescription>
+        <MainDescription>Build the right foundations before diving into software engineering. Learn what to focus on first, avoid common beginner mistakes, and start your journey with confidence.
+        </MainDescription>
 
-        <VideoContainer>
-          <VideoGridBackground />
-          <PlayButton>
-            <svg viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </PlayButton>
-          <VideoLabel>▶ Embedded video [YouTube video placeholder]</VideoLabel>
+        <VideoContainer style={{ cursor: 'default', borderStyle: 'solid' }}>
+          <iframe
+            src="https://www.youtube.com/embed/F5s6lPoxr88"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+          ></iframe>
         </VideoContainer>
 
         <ListSection>
@@ -1390,25 +1480,30 @@ export const SeEssentials = () => {
               <BulletItem key={index}>{point}</BulletItem>
             ))}
           </BulletList>
+          <StartingDateNote>
+            <span> Next cohort starts 17 August 2025</span>
+          </StartingDateNote>
         </ListSection>
 
         <CtaSection>
           <CtaTextContainer>
             <CtaTitle>Ready to Go Further?</CtaTitle>
             <CtaText>
-              <p>This is where you transition naturally.</p>
-              <p>This video is an introduction.</p>
-              <p><strong>Software Engineering Essentials</strong> is the complete hands-on course.</p>
+              <p>
+                <strong>Programming Essentials</strong> is a practical introduction to software engineering designed to give you the foundations I wish I'd had from day one. Learn what matters, avoid common beginner mistakes, and build the confidence to start your software engineering journey the right way. Sign up today!
+              </p>
             </CtaText>
           </CtaTextContainer>
-          <CtaImageContainer>
-            <CtaImage src="/textbook.png" alt="Software Engineering Essentials Textbook" />
+          <CtaRightContainer>
+            <CtaImageContainer>
+              <CtaImage src="/textbook.png" alt="Software Engineering Essentials Textbook" />
+            </CtaImageContainer>
             <CtaButton onClick={() => setIsModalOpen(true)}>Sign Up</CtaButton>
-          </CtaImageContainer>
+          </CtaRightContainer>
         </CtaSection>
 
-        <RoadmapSection>
-          <RoadmapTitle>Roadmap</RoadmapTitle>
+        <RoadmapSection className="roadmap-section-wrapper">
+          <RoadmapTitle>Programming Essentials — Course Foundations Roadmap</RoadmapTitle>
           <RoadmapGrid>
             {roadmapModulesData.map((mod, index) => {
               const isLast = index === roadmapModulesData.length - 1;
@@ -1419,8 +1514,9 @@ export const SeEssentials = () => {
 
               return (
                 <Fragment key={mod.id}>
-                  <RoadmapItemWrapper>
-                    <RoadmapItem 
+                  <RoadmapItemWrapper className="roadmap-item-wrapper" data-id={mod.id}>
+                    <RoadmapItem
+                      className={activeModuleId === mod.id ? 'active' : ''}
                       onClick={() => {
                         setSelectedModule(mod);
                         setModulePaymentSuccess(false);
@@ -1429,15 +1525,15 @@ export const SeEssentials = () => {
                     >
                       <RoadmapItemName>{mod.name}</RoadmapItemName>
                     </RoadmapItem>
-                    
+
                     {!isLast && (
-                      <HorizontalLink 
+                      <HorizontalLink
                         className={`${isDesktopEndOfRow ? 'desktop-end' : ''} ${isTabletEndOfRow ? 'tablet-end' : ''}`}
                       />
                     )}
 
                     {!isLast && (isDesktopSnake || isTabletSnake) && (
-                      <SnakeLink 
+                      <SnakeLink
                         className={`${isDesktopSnake ? 'desktop-show' : 'desktop-hide'} ${isTabletSnake ? 'tablet-show' : 'tablet-hide'}`}
                       />
                     )}
@@ -1451,7 +1547,7 @@ export const SeEssentials = () => {
 
         <BuildSection>
           <BuildImageContainer>
-            <BuildImage src="/ux-giants-1-1.png" alt="Software Projects Showcase" />
+            <BuildImage src="/dd-7.png" alt="Software Projects Showcase" />
           </BuildImageContainer>
           <BuildTextContainer>
             <BuildTitle>What You'll Build</BuildTitle>
@@ -1479,7 +1575,7 @@ export const SeEssentials = () => {
 
       {/* REGISTRATION MODAL */}
       {isModalOpen && (
-        <ModalBackdrop 
+        <ModalBackdrop
           $isPaying={isPaying}
           onClick={() => {
             if (!isPaying) {
@@ -1488,7 +1584,7 @@ export const SeEssentials = () => {
             }
           }}
         >
-          <ModalContainer 
+          <ModalContainer
             $isPaying={isPaying}
             onClick={(e) => e.stopPropagation()}
           >
@@ -1561,7 +1657,7 @@ export const SeEssentials = () => {
 
       {/* INDIVIDUAL MODULE DETAIL MODAL */}
       {selectedModule && (
-        <ModalBackdrop 
+        <ModalBackdrop
           $isPaying={isPaying}
           onClick={() => {
             if (!isPaying) {
@@ -1570,19 +1666,19 @@ export const SeEssentials = () => {
             }
           }}
         >
-          <ModalContainer 
+          <ModalContainer
             $isPaying={isPaying}
             onClick={(e) => e.stopPropagation()}
           >
             {!modulePaymentSuccess ? (
               <>
                 <CloseButton onClick={() => !isPaying && setSelectedModule(null)}>×</CloseButton>
-                <ModalTitle>{selectedModule.name}</ModalTitle>
-                <ModalDescription>
+                <RoadmapModalTitle>{selectedModule.name}</RoadmapModalTitle>
+                <RoadmapModalDescription>
                   {selectedModule.description}
-                </ModalDescription>
+                </RoadmapModalDescription>
 
-                <ModulePriceTag>
+                <RoadmapModulePriceTag>
                   {selectedModule.isCapstone ? (
                     <>
                       <span>Price: R0</span>
@@ -1591,13 +1687,15 @@ export const SeEssentials = () => {
                   ) : (
                     <span>Price: R{selectedModule.price}</span>
                   )}
-                </ModulePriceTag>
+                </RoadmapModulePriceTag>
 
-                <ModuleDetailList>
-                  {selectedModule.details.map((detail, idx) => (
-                    <ModuleDetailItem key={idx}>{detail}</ModuleDetailItem>
-                  ))}
-                </ModuleDetailList>
+                {selectedModule.details && selectedModule.details.length > 0 && (
+                  <ModuleDetailList>
+                    {selectedModule.details.map((detail, idx) => (
+                      <ModuleDetailItem key={idx}>{detail}</ModuleDetailItem>
+                    ))}
+                  </ModuleDetailList>
+                )}
 
                 {!selectedModule.isCapstone && (
                   <>
